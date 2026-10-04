@@ -6,7 +6,7 @@
     "ignore": ["firebase.json", "**/.*"],
     "headers": [
       {
-        "source": "**/*.@(webp|jpg|png|woff2)",
+        "source": "**/*.@(webp|jpg|png|js)",
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
       },
       {

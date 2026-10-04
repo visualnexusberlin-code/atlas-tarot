@@ -3,8 +3,10 @@
 Experiencia interactiva sobre los 22 Arcanos Mayores del Tarot de Marsella, leídos con C. G. Jung, Sallie Nichols y Alejandro Jodorowsky. Sitio estático, sin dependencias ni paso de compilación.
 
 - `public/index.html`: toda la experiencia (HTML, CSS y JS en un solo archivo).
-- `public/img/`: estampas en WebP (`NN.webp` 768×1536 y `NN-384.webp` para miniaturas) y `og.jpg`.
-- `public/fonts/`: IM Fell English y EB Garamond (SIL Open Font License), autoalojadas.
+- `public/cartas/`: las 22 estampas en WebP (768×1536).
+- `public/vendor/three.module.min.js`: Three.js 0.169 (MIT), autoalojado, para la sección de arquetipos.
+- `public/img/og.jpg`: imagen para compartir en redes.
+- Fuentes IM Fell English y EB Garamond (SIL OFL) incrustadas en el HTML.
 
 ## Probar en local
     cd public && python3 -m http.server 8000
