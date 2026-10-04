@@ -8,6 +8,13 @@ Experiencia interactiva sobre los 22 Arcanos Mayores del Tarot de Marsella, leí
 - `public/img/og.jpg`: imagen para compartir en redes.
 - Fuentes IM Fell English y EB Garamond (SIL OFL) incrustadas en el HTML.
 
+## Versión inglesa
+`public/en/index.html` se genera a partir del español; no se edita a mano:
+
+    python3 tools/make_en.py
+
+Los textos ingleses están en `tools/i18n_en.py`. Si cambias un texto en el español, el script se detiene y dice cuál ya no encuentra, para que la traducción no se quede atrás sin aviso.
+
 ## Probar en local
     cd public && python3 -m http.server 8000
 
