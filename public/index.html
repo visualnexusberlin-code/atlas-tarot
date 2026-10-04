@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speculum Arcanorum · El tarot como espejo</title>
+<meta name="description" content="Una experiencia interactiva sobre los 22 Arcanos Mayores del Tarot de Marsella, leídos a través de Jung, Sallie Nichols y Alejandro Jodorowsky. Una herramienta de reflexión, no de predicción.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0c0b0a">
+<link rel="canonical" href="https://atlas-tarot.web.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Speculum Arcanorum · El tarot como espejo">
+<meta property="og:description" content="Los 22 Arcanos Mayores del Tarot de Marsella leídos con Jung, Nichols y Jodorowsky. Una experiencia de reflexión, no de predicción.">
+<meta property="og:image" content="https://atlas-tarot.web.app/img/og.jpg">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230c0b0a'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23e8dcc0' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23c8432a'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/fell-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/garamond-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Fell";src:url(fonts/fell-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Fell";src:url(fonts/fell-400i.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Garamond";src:url(fonts/garamond-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Garamond";src:url(fonts/garamond-400i.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Garamond";src:url(fonts/garamond-600.woff2) format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
+:root{
+  --ink:#0c0b0a; --ink-2:#14120f; --ink-3:#1d1a15;
+  --paper:#e8dcc0; --paper-2:#d6c8a8; --dim:#a89a7c; --muted:#7d715b;
+  --line:rgba(232,220,192,.14); --line-2:rgba(232,220,192,.28);
+  --verm:#d0492e; --ochre:#d29d36; --ultra:#4a6db5; --sky:#93b9d8;
+  --flesh:#e7b595; --green:#8aa75c; --violet:#8a68a0;
+  --display:"Fell", "Iowan Old Style", Georgia, serif;
+  --body:"Garamond", "Iowan Old Style", Georgia, serif;
+  --gutter:clamp(16px,4vw,56px);
+  --hatch:repeating-linear-gradient(115deg, rgba(232,220,192,.022) 0 1px, transparent 1px 6px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:clamp(17px,1.05vw + 10px,20px);line-height:1.55;overflow-x:hidden}
+::selection{background:var(--verm);color:var(--paper)}
+a{color:var(--ochre)}
+button{font:inherit;color:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:var(--paper)}
+img{max-width:100%;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:1.5px solid var(--ochre);outline-offset:3px}
+
+/* ---------- cabecera ---------- */
+.top{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px var(--gutter);transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+.top.solid{background:rgba(12,11,10,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-color:var(--line)}
+.brand{font-family:var(--display);font-size:1.15rem;letter-spacing:.04em;text-decoration:none;color:var(--paper);white-space:nowrap}
+.brand i{color:var(--verm);font-style:normal}
+.nav{display:flex;gap:clamp(10px,1.6vw,26px);flex-wrap:wrap;justify-content:flex-end}
+.nav a{color:var(--dim);text-decoration:none;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase}
+.nav a:hover,.nav a.on{color:var(--paper)}
+.menu-btn{display:none;background:none;border:1px solid var(--line-2);border-radius:2px;padding:6px 12px;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
+@media (max-width:860px){
+  .menu-btn{display:block}
+  .nav{position:fixed;inset:56px 0 auto 0;background:rgba(12,11,10,.97);flex-direction:column;align-items:center;gap:18px;padding:26px 0 30px;border-bottom:1px solid var(--line);transform:translateY(-130%);transition:transform .35s}
+  .nav.open{transform:none}
+}
+
+/* ---------- secciones ---------- */
+section{position:relative;padding:clamp(80px,11vw,150px) var(--gutter);border-top:1px solid var(--line);background-image:var(--hatch)}
+.wrap{max-width:1180px;margin:0 auto}
+.kicker{font-size:.78rem;letter-spacing:.24em;text-transform:uppercase;color:var(--verm);margin:0 0 14px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.08;margin:0}
+h2{font-size:clamp(2.2rem,4.6vw,4rem);letter-spacing:-.005em}
+h3{font-size:clamp(1.35rem,2vw,1.7rem)}
+.lede{max-width:46em;color:var(--paper-2);font-size:1.08em;margin:22px 0 0}
+.lede em{color:var(--paper)}
+.note{color:var(--dim);font-size:.9em}
+.btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--line-2);color:var(--paper);padding:10px 18px;border-radius:2px;font-size:.84rem;letter-spacing:.14em;text-transform:uppercase;transition:border-color .2s,background .2s}
+.btn:hover{border-color:var(--paper);background:rgba(232,220,192,.05)}
+.btn.primary{border-color:var(--verm);background:rgba(208,73,46,.14)}
+.btn.primary:hover{background:rgba(208,73,46,.28)}
+.btn[disabled]{opacity:.4;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:999px;padding:3px 12px;font-size:.86em;background:transparent;margin:3px 4px 3px 0}
+.chip:hover{border-color:var(--paper)}
+.chip b{font-family:var(--display);font-weight:400;color:var(--ochre)}
+
+/* ---------- la nube ---------- */
+#nube{height:100svh;min-height:560px;padding:0;border-top:0;overflow:hidden;background:radial-gradient(ellipse at 50% 55%, #1a1611 0%, #0c0b0a 62%)}
+#nube canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:none}
+.nube-ui{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:96px var(--gutter) 26px}
+.nube-ui > *{pointer-events:auto}
+.nube-title{max-width:34rem;pointer-events:none!important}
+.nube-title h1{font-size:clamp(2.6rem,6.4vw,5.6rem);letter-spacing:-.01em}
+.nube-title h1 span{display:block;font-style:italic;font-size:.42em;color:var(--paper-2);margin-top:12px;letter-spacing:0}
+.nube-title p{color:var(--paper-2);max-width:28rem;margin:18px 0 0;font-size:1.02em}
+.nube-bottom{display:flex;gap:18px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.proyecta{display:flex;gap:0;border:1px solid var(--line-2);background:rgba(12,11,10,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);max-width:520px;width:100%}
+.proyecta input{flex:1;min-width:0;background:transparent;border:0;padding:12px 16px;font-style:italic}
+.proyecta input::placeholder{color:var(--muted)}
+.proyecta button{background:transparent;border:0;border-left:1px solid var(--line-2);padding:0 16px;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre)}
+.secretos-count{font-family:var(--display);font-size:1rem;color:var(--paper-2);background:rgba(12,11,10,.72);border:1px solid var(--line-2);padding:8px 14px;white-space:nowrap}
+.secretos-count b{color:var(--ochre);font-weight:400}
+.nube-side{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.panel{position:absolute;right:var(--gutter);top:96px;width:min(380px,calc(100% - 2*var(--gutter)));background:rgba(14,12,10,.92);border:1px solid var(--line-2);padding:22px 24px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transform:translateY(-8px);transition:opacity .35s,transform .35s;pointer-events:none}
+.panel.show{opacity:1;transform:none;pointer-events:auto}
+.panel .x{position:absolute;top:8px;right:10px;background:none;border:0;color:var(--dim);font-size:1.3rem;line-height:1}
+.panel h3{margin:0 0 8px;color:var(--ochre)}
+.panel p{margin:0 0 12px;color:var(--paper-2)}
+.indice{position:absolute;left:var(--gutter);right:var(--gutter);bottom:84px;background:rgba(12,11,10,.94);border:1px solid var(--line-2);padding:18px;display:none;max-height:50vh;overflow:auto}
+.indice.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.indice button{background:none;border:1px solid var(--line);text-align:left;padding:7px 10px;font-size:.9em}
+.indice button:hover{border-color:var(--paper)}
+.indice b{font-family:var(--display);font-weight:400;color:var(--ochre);margin-right:6px}
+@media (max-width:640px){.nube-title p{display:none}.panel{top:auto;bottom:150px}}
+
+/* ---------- cartas ---------- */
+.card{position:relative;aspect-ratio:1/2;background:#efe4c9;color:#1a1612;border:1px solid #2a241c;box-shadow:0 1px 0 rgba(255,255,255,.04),0 18px 40px -18px rgba(0,0,0,.8);overflow:hidden;user-select:none}
+.card .art{position:absolute;inset:7.5% 0;overflow:hidden}
+.card .art svg,.card .art img{width:100%;height:100%;object-fit:cover;display:block;background:#1a1612}
+.card .band{position:absolute;left:0;right:0;height:7.5%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:clamp(8px,.82vw,14px);letter-spacing:.04em;background:#efe4c9;border-color:#2a241c;border-style:solid;border-width:0;white-space:nowrap}
+.card .band.top{top:0;border-bottom-width:1px}
+.card .band.bot{bottom:0;border-top-width:1px}
+.card.lg .band{font-size:clamp(13px,1.6vw,20px)}
+.card.back{background:#1b1712;border-color:#3a3125}
+.card.back .art,.card.back .band{display:none}
+.card.back::after{content:"";position:absolute;inset:8px;border:1px solid rgba(232,220,192,.25);background:
+  radial-gradient(circle at 50% 50%, rgba(208,73,46,.55) 0 3px, transparent 4px),
+  radial-gradient(circle at 50% 50%, transparent 0 22%, rgba(232,220,192,.22) 22.5% 23%, transparent 23.5%),
+  repeating-linear-gradient(45deg, rgba(232,220,192,.07) 0 1px, transparent 1px 7px),
+  repeating-linear-gradient(-45deg, rgba(232,220,192,.07) 0 1px, transparent 1px 7px)}
+.card-btn{background:none;border:0;padding:0;display:block;width:100%;text-align:left}
+.card-btn:hover .card{transform:translateY(-4px)}
+.card-btn .card{transition:transform .3s}
+.cap{margin-top:8px;font-size:.86em;color:var(--dim);line-height:1.25}
+.cap b{display:block;font-weight:400;color:var(--paper);font-family:var(--display);font-size:1.08em}
+
+/* ---------- viaje ---------- */
+.viaje{display:grid;grid-template-columns:minmax(110px,150px) 1fr;gap:clamp(18px,3vw,40px);margin-top:56px;align-items:start}
+.loco-solo{position:sticky;top:96px}
+.loco-solo .note{margin-top:10px}
+.filas{display:flex;flex-direction:column;gap:46px}
+.fila h3{font-size:1.25rem;margin-bottom:6px}
+.fila p.note{margin:0 0 16px;max-width:44em}
+.fila-cards{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(8px,1.4vw,18px)}
+@media (max-width:760px){.viaje{grid-template-columns:1fr}.loco-solo{position:static;max-width:130px}.fila-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ---------- cámara ---------- */
+dialog{border:0;padding:0;background:transparent;color:var(--paper);max-width:none;max-height:none}
+dialog::backdrop{background:rgba(6,5,4,.86);backdrop-filter:blur(3px)}
+#camara{width:100vw;height:100svh;inset:0;margin:0}
+.cam{height:100%;display:grid;grid-template-columns:minmax(260px,40%) 1fr;background:var(--ink);background-image:var(--hatch);border-top:1px solid var(--line)}
+.cam-left{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px clamp(16px,3vw,48px) 28px;border-right:1px solid var(--line);overflow:hidden}
+.cam-card{width:min(100%, calc((100svh - 220px)/2));max-width:340px;position:relative;cursor:none;touch-action:none}
+.cam-card .lens{position:absolute;width:var(--lr,130px);height:var(--lr,130px);margin:calc(var(--lr,130px)/-2) 0 0 calc(var(--lr,130px)/-2);border-radius:50%;overflow:hidden;border:1.5px solid rgba(232,220,192,.9);box-shadow:0 0 0 1px rgba(12,11,10,.7),0 12px 30px rgba(0,0,0,.55),0 0 0 9999px rgba(12,11,10,.32);pointer-events:none;opacity:0;transition:opacity .25s;z-index:3;background:#efe4c9}
+.cam-card .lens .mag{position:absolute;left:0;top:0;transform-origin:0 0;filter:contrast(1.12) saturate(1.2)}
+.cam-card .lens .mag .card{box-shadow:none;border:0}
+.cam-card.lensing .lens{opacity:1}
+.cam-card .lens::after{content:"";position:absolute;inset:5px;border-radius:50%;border:1px dashed rgba(42,36,28,.35);z-index:2}
+.hs{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:1.5px solid var(--verm);background:rgba(208,73,46,.25);opacity:0;z-index:4;padding:0;transition:opacity .2s,transform .2s}
+.hs::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--verm)}
+.hs.vis{opacity:1;animation:pulse 1.6s infinite}
+.hs.seen{border-color:var(--ochre)}.hs.seen::after{background:var(--ochre)}
+@keyframes pulse{50%{transform:scale(1.25)}}
+.hs-note{margin-top:18px;min-height:5.2em;max-width:340px;width:100%;text-align:center;color:var(--paper-2);font-size:.95em}
+.hs-note b{display:block;font-family:var(--display);font-weight:400;color:var(--ochre);font-size:1.15em}
+.cam-nav{position:absolute;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;gap:8px;z-index:5}
+.cam-right{overflow:auto;padding:70px clamp(18px,4vw,64px) 48px}
+.cam-head .num{font-family:var(--display);color:var(--verm);font-size:1.1rem;letter-spacing:.12em}
+.cam-head h2{margin:6px 0 4px}
+.cam-head .hist{font-family:var(--display);color:var(--dim);letter-spacing:.14em;font-size:.95rem}
+.cam-head .kw{margin:16px 0 0;font-size:1.12em}
+.cam-head .sombra{color:var(--dim);margin:4px 0 0;font-size:.95em}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:30px 0 24px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 16px;color:var(--dim);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.tabs button.on{color:var(--paper);border-color:var(--verm)}
+.tabpane{display:none;max-width:40em}
+.tabpane.on{display:block}
+.tabpane p{margin:0 0 16px}
+.preguntas{list-style:none;padding:0;margin:0 0 20px}
+.preguntas li{border-left:2px solid var(--verm);padding:6px 0 6px 16px;margin-bottom:12px;font-style:italic;font-size:1.08em}
+.rel-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.rel-row .t{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:4px}
+textarea{width:100%;min-height:9em;background:rgba(232,220,192,.04);border:1px solid var(--line-2);padding:14px;resize:vertical;line-height:1.5}
+textarea::placeholder{color:var(--muted);font-style:italic}
+.saved{color:var(--green);font-size:.88em;margin-left:10px;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+.x-close{position:absolute;top:14px;right:18px;z-index:6;background:none;border:1px solid var(--line-2);width:38px;height:38px;border-radius:50%;font-size:1.2rem;line-height:1}
+@media (max-width:860px){
+  .cam{grid-template-columns:1fr;overflow:auto;height:100%}
+  .cam-left{border-right:0;border-bottom:1px solid var(--line);padding-top:64px}
+  .cam-card{width:min(58vw,260px)}
+  .cam-right{overflow:visible;padding-top:30px}
+}
+
+/* ---------- mesa ---------- */
+.mesa-ctrl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:40px 0 10px}
+.mesa-ctrl select{background:var(--ink-2);border:1px solid var(--line-2);padding:10px 14px;border-radius:2px}
+.estr-desc{color:var(--paper-2);max-width:46em;min-height:3em;margin:10px 0 0}
+.tapete{margin-top:34px;min-height:340px;border:1px solid var(--line);background:radial-gradient(ellipse at center, rgba(208,73,46,.06), transparent 70%), var(--ink-2);padding:clamp(20px,3vw,40px);display:flex;align-items:center;justify-content:center}
+.linea{display:flex;gap:clamp(10px,2vw,26px);justify-content:center;flex-wrap:wrap}
+.slot{width:clamp(96px,12vw,150px);text-align:center}
+.slot .role{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;min-height:2.6em;display:flex;align-items:flex-end;justify-content:center}
+.slot .role.calc{color:var(--ochre)}
+.flip{perspective:900px;background:none;border:0;padding:0;width:100%}
+.flip .inner{position:relative;transition:transform .7s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.flip .inner > .card{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flip .inner > .card.front{position:absolute;inset:0;transform:rotateY(180deg)}
+.flip.on .inner{transform:rotateY(180deg)}
+.slot .nm{margin-top:8px;font-family:var(--display);min-height:1.4em;font-size:.98em}
+.cruz{display:grid;grid-template-columns:repeat(3,clamp(72px,8.5vw,112px));grid-template-areas:". a ." "l c r" ". b .";gap:clamp(8px,1.6vw,22px);justify-content:center}
+.cruz .slot{width:auto}
+.calc-line{font-family:var(--display);color:var(--ochre);text-align:center;margin-top:18px;font-size:1.05em}
+.sintesis{margin-top:30px;display:none}
+.sintesis.on{display:block}
+.sint-row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.sint-row .r{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--verm);padding-top:4px}
+.sint-row h4{margin:0;font-family:var(--display);font-weight:400;font-size:1.2em}
+.sint-row p{margin:4px 0 0;color:var(--paper-2)}
+.sint-row p i{color:var(--paper)}
+.miradas{margin:22px 0 0;padding:16px 20px;border:1px dashed var(--line-2);color:var(--paper-2)}
+.aviso{margin-top:26px;font-size:.88em;color:var(--dim);border-left:2px solid var(--line-2);padding-left:14px;max-width:52em}
+@media (max-width:640px){.sint-row{grid-template-columns:1fr;gap:4px}}
+
+/* ---------- grafo ---------- */
+.grafo-ctrl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin:36px 0 18px}
+.seg{display:inline-flex;border:1px solid var(--line-2)}
+.seg button{background:none;border:0;padding:8px 14px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.seg button.on{background:rgba(232,220,192,.08);color:var(--paper)}
+.tog{display:inline-flex;align-items:center;gap:8px;font-size:.92em;color:var(--paper-2);cursor:pointer}
+.tog input{accent-color:var(--verm)}
+.tog i{display:inline-block;width:22px;height:2px}
+.grafo-box{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+.grafo-svg{width:100%;height:auto;border:1px solid var(--line);background:var(--ink-2)}
+.grafo-svg .e{fill:none;stroke-width:1.6;transition:opacity .3s,stroke-width .3s}
+.grafo-svg .e.duo{stroke:var(--ochre)} .grafo-svg .e.par{stroke:var(--verm)} .grafo-svg .e.suma{stroke:var(--sky);stroke-dasharray:5 4} .grafo-svg .e.suc{stroke:rgba(232,220,192,.32)}
+.grafo-svg.h-duo .e.duo,.grafo-svg.h-par .e.par,.grafo-svg.h-suma .e.suma,.grafo-svg.h-suc .e.suc{display:none}
+.grafo-svg.sel .e{opacity:.08}
+.grafo-svg.sel .e.on{opacity:1;stroke-width:2.6}
+.grafo-svg .n{cursor:pointer;outline:none}
+.grafo-svg .n:focus-visible circle{stroke:var(--ochre);stroke-width:2.5}
+.grafo-svg .n circle{fill:var(--ink);stroke:var(--line-2);stroke-width:1.2;transition:stroke .2s,fill .2s}
+.grafo-svg .n:hover circle{stroke:var(--paper)}
+.grafo-svg .n text{fill:var(--paper);font-family:var(--display);text-anchor:middle;pointer-events:none}
+.grafo-svg .n .lbl{fill:var(--dim);font-family:var(--body);font-style:italic}
+.grafo-svg.sel .n{opacity:.25}
+.grafo-svg.sel .n.on{opacity:1}
+.grafo-svg .n.me circle{fill:var(--verm);stroke:var(--paper)}
+.grafo-svg .rowlbl{fill:var(--muted);font-family:var(--body);font-style:italic;font-size:13px}
+.grafo-info{border:1px solid var(--line);padding:20px;background:var(--ink-2);min-height:200px}
+.grafo-info h3{margin:0 0 4px}
+@media (max-width:900px){.grafo-box{grid-template-columns:1fr}}
+
+/* ---------- laboratorio ---------- */
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px}
+.cifra{background:var(--ink);padding:24px 22px}
+.cifra .v{font-family:var(--display);font-size:clamp(1.8rem,3vw,2.6rem);color:var(--paper);line-height:1.1;word-break:break-word}
+.cifra .v small{font-size:.5em;color:var(--dim)}
+.cifra .l{color:var(--paper-2);font-size:.92em;margin-top:8px}
+.lab-block{margin-top:64px;display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(20px,4vw,56px);align-items:start}
+.lab-block .txt p{color:var(--paper-2)}
+.chart{width:100%;height:auto;border:1px solid var(--line);background:var(--ink-2)}
+.chart text{font-family:var(--display);fill:var(--dim);font-size:11px;text-anchor:middle}
+.chart .bar{fill:var(--paper-2);transition:fill .2s}
+.chart .bar.hi{fill:var(--verm)}
+.chart .bar.zero{fill:none}
+.chart .exp{stroke:var(--ochre);stroke-dasharray:4 4}
+.seedbox{display:flex;border:1px solid var(--line-2);margin:14px 0}
+.seedbox input{flex:1;min-width:0;background:transparent;border:0;padding:10px 14px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.86em;color:var(--paper-2)}
+@media (max-width:860px){.lab-block{grid-template-columns:1fr}}
+
+/* ---------- mito ---------- */
+.tl{margin-top:54px;position:relative;border-left:1px solid var(--line-2);padding-left:clamp(22px,4vw,48px)}
+.tl-item{position:relative;padding:0 0 34px}
+.tl-item::before{content:"";position:absolute;left:calc(-1*clamp(22px,4vw,48px) - 5px);top:.55em;width:9px;height:9px;border-radius:50%;background:var(--ink);border:1.5px solid var(--paper-2)}
+.tl-item.mito::before{border-color:var(--violet)} .tl-item.dato::before{border-color:var(--green)} .tl-item.hip::before{border-color:var(--ochre)} .tl-item.sis::before{border-color:var(--sky)}
+.tl-y{font-family:var(--display);font-size:1.4rem;color:var(--paper)}
+.tl-tag{display:inline-block;margin-left:10px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;padding:2px 8px;border:1px solid currentColor;vertical-align:middle}
+.tl-item.mito .tl-tag{color:var(--violet)} .tl-item.dato .tl-tag{color:var(--green)} .tl-item.hip .tl-tag{color:var(--ochre)} .tl-item.sis .tl-tag{color:var(--sky)}
+.tl-item h3{font-size:1.2rem;margin:4px 0 6px}
+.tl-item p{margin:0;color:var(--paper-2);max-width:46em}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:22px;font-size:.88em;color:var(--dim)}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid;margin-right:7px;vertical-align:middle}
+.legend .d::before{border-color:var(--green)}.legend .h::before{border-color:var(--ochre)}.legend .s::before{border-color:var(--sky)}.legend .m::before{border-color:var(--violet)}
+
+/* ---------- colores ---------- */
+.colores{margin-top:46px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.color{border:1px solid var(--line);background:var(--ink-2)}
+.color .sw{height:86px;background-image:repeating-linear-gradient(115deg, rgba(0,0,0,.14) 0 1px, transparent 1px 4px)}
+.color .c{padding:14px 16px}
+.color h3{font-size:1.15rem;margin:0 0 6px}
+.color p{margin:0;font-size:.9em;color:var(--paper-2)}
+.color p.neg{color:var(--dim);margin-top:4px}
+
+/* ---------- pie y diálogos ---------- */
+footer{border-top:1px solid var(--line);padding:56px var(--gutter) 40px;color:var(--dim);font-size:.92em}
+.foot{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+.foot-links{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:flex-end;align-content:flex-start}
+.foot-links button{background:none;border:0;padding:0;color:var(--paper-2);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-2)}
+@media (max-width:760px){.foot{grid-template-columns:1fr}.foot-links{justify-content:flex-start}}
+.dlg{width:min(760px,calc(100vw - 24px));max-height:calc(100svh - 40px);background:var(--ink-2);border:1px solid var(--line-2)}
+.dlg-in{padding:clamp(22px,4vw,44px);overflow:auto;max-height:calc(100svh - 40px);position:relative}
+.dlg h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:18px}
+.dlg h3{font-size:1.2rem;margin:26px 0 8px;color:var(--ochre)}
+.dlg p,.dlg li{color:var(--paper-2)}
+.dlg .ph{background:rgba(210,157,54,.16);color:var(--ochre);padding:0 4px}
+.diario-entry{border-top:1px solid var(--line);padding:14px 0}
+.diario-entry .d{font-size:.8em;color:var(--dim);letter-spacing:.06em}
+.diario-entry h4{margin:2px 0 4px;font-family:var(--display);font-weight:400;font-size:1.1em}
+.diario-entry p{margin:0;white-space:pre-wrap}
+.cal-box{position:fixed;left:12px;bottom:12px;z-index:100;background:#000;color:#0f0;font:12px ui-monospace,monospace;padding:8px 10px;border:1px solid #0f0;display:none}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#2a241c" stroke-width=".35" stroke-opacity=".35"/>
+    </pattern>
+    <pattern id="hatch2" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="3" stroke="#2a241c" stroke-width=".3" stroke-opacity=".28"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#efe4c9" stop-opacity="1"/>
+      <stop offset="1" stop-color="#efe4c9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<header class="top" id="top">
+  <a class="brand" href="#nube">Speculum <i>·</i> Arcanorum</a>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menú</button>
+  <nav class="nav" id="nav" aria-label="Secciones">
+    <a href="#nube">La nube</a>
+    <a href="#viaje">El viaje</a>
+    <a href="#mesa">La mesa</a>
+    <a href="#grafo">El grafo</a>
+    <a href="#laboratorio">Laboratorio</a>
+    <a href="#mito">Capas del mito</a>
+    <a href="#colores">Colores</a>
+  </nav>
+</header>
+
+<main>
+<!-- ================= LA NUBE ================= -->
+<section id="nube" aria-label="La nube de los arcanos">
+  <canvas id="nubeCanvas" aria-hidden="true"></canvas>
+  <div class="nube-ui">
+    <div class="nube-title">
+      <h1>Speculum Arcanorum<span>El tarot como espejo</span></h1>
+      <p>Veintidós arcanos dispersos en la nube del inconsciente. Pasa la lente: donde mira la consciencia, el caos se ordena en figura. Algunos puntos esconden secretos.</p>
+    </div>
+    <div class="panel" id="panelNube" role="status" aria-live="polite">
+      <button class="x" aria-label="Cerrar" data-close="panelNube">×</button>
+      <div id="panelNubeBody"></div>
+    </div>
+    <div class="indice" id="indice" aria-label="Índice de arcanos"></div>
+    <div class="nube-bottom">
+      <form class="proyecta" id="proyecta" autocomplete="off">
+        <label class="sr" for="proyectaIn">Proyecta una palabra o una pregunta</label>
+        <input id="proyectaIn" maxlength="140" placeholder="Proyecta una palabra, una pregunta, un sueño…">
+        <button type="submit">Proyectar</button>
+      </form>
+      <div class="nube-side">
+        <button class="btn" id="indiceBtn" aria-expanded="false" aria-controls="indice">Índice</button>
+        <div class="secretos-count" id="secretosCount">Secretos <b>0</b> / 9</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EL VIAJE ================= -->
+<section id="viaje">
+  <div class="wrap">
+    <p class="kicker">I · El viaje del Loco</p>
+    <h2>Veintidós estaciones de un mismo camino</h2>
+    <p class="lede">Los Arcanos Mayores pueden leerse en secuencia, como una historia sin palabras. Aquí siguen la disposición que propuso <em>Sallie Nichols</em>: el Loco fuera de la serie, como viajero, y tres filas de siete. Cada carta es una cámara: entra, mira con la lente, amplifica, dialoga y deja tu propio reflejo.</p>
+    <div class="viaje">
+      <div class="loco-solo" id="locoSolo"></div>
+      <div class="filas" id="filas"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LA MESA ================= -->
+<section id="mesa">
+  <div class="wrap">
+    <p class="kicker">II · La mesa de lectura</p>
+    <h2>Echar las cartas, leerse a uno mismo</h2>
+    <p class="lede">Cuatro maneras de tender los arcanos, tomadas de Jodorowsky y de Houdouin. Ninguna predice: todas ponen imágenes frente a una pregunta para que la mirada encuentre lo que ya sabía.</p>
+    <div class="mesa-ctrl">
+      <label class="sr" for="estrategia">Estrategia de lectura</label>
+      <select id="estrategia">
+        <option value="pma">Tres cartas · protagonista, mediador, antagonista</option>
+        <option value="pregunta">Tres cartas · el tarot hace la pregunta</option>
+        <option value="viva">Tirada viva · seguir las miradas</option>
+        <option value="cruz">Tirada en cruz · el centro por aritmética</option>
+      </select>
+      <button class="btn primary" id="barajar">Barajar y tender</button>
+      <button class="btn" id="revelar" disabled>Revelar todas</button>
+      <button class="btn" id="diarioBtn">Mi diario</button>
+    </div>
+    <p class="estr-desc" id="estrDesc"></p>
+    <div class="tapete" id="tapete"><p class="note">Piensa en una pregunta, o en ninguna. Después, baraja.</p></div>
+    <div class="sintesis" id="sintesis">
+      <div id="sintRows"></div>
+      <div class="miradas" id="miradas"></div>
+      <p style="margin-top:22px"><label for="lecturaNota" class="note">¿Qué ves tú en esta tirada? (Se guarda solo en este navegador.)</label></p>
+      <textarea id="lecturaNota" placeholder="Escribe lo que te sugiere, sin censura. Asociación libre: la primera palabra, la primera imagen."></textarea>
+      <p><button class="btn" id="guardarLectura">Guardar en mi diario</button><span class="saved" id="savedLectura">Guardado</span></p>
+    </div>
+    <p class="aviso">El tarot de esta web es un instrumento de reflexión y autoconocimiento. No predice el futuro y no sustituye el consejo médico, psicológico, legal ni financiero. Si atraviesas un momento difícil, busca apoyo profesional o en personas de confianza.</p>
+  </div>
+</section>
+
+<!-- ================= EL GRAFO ================= -->
+<section id="grafo">
+  <div class="wrap">
+    <p class="kicker">III · El grafo de los arquetipos</p>
+    <h2>Ninguna carta está sola</h2>
+    <p class="lede">Jodorowsky y Costa leen el tarot como una red: dos series de diez grados, dúos que repiten el mismo grado en dos niveles, parejas complementarias y pares que suman XXI. Toca un arcano para encender sus relaciones. Cambia de geometría para verlo con los ojos de Nichols.</p>
+    <div class="grafo-ctrl">
+      <div class="seg" role="group" aria-label="Disposición">
+        <button class="on" data-lay="jodo">Dos series · Jodorowsky</button>
+        <button data-lay="nichols">Tres filas · Nichols</button>
+      </div>
+      <label class="tog"><input type="checkbox" checked data-e="duo"><i style="background:var(--ochre)"></i>Dúos</label>
+      <label class="tog"><input type="checkbox" checked data-e="par"><i style="background:var(--verm)"></i>Parejas</label>
+      <label class="tog"><input type="checkbox" data-e="suma"><i style="background:var(--sky)"></i>Suman XXI</label>
+      <label class="tog"><input type="checkbox" data-e="suc"><i style="background:rgba(232,220,192,.4)"></i>Sucesión</label>
+    </div>
+    <div class="grafo-box">
+      <svg class="grafo-svg h-suma h-suc" id="grafoSvg" viewBox="0 0 1000 560" role="img" aria-label="Grafo de relaciones entre los 22 arcanos mayores"></svg>
+      <div class="grafo-info" id="grafoInfo">
+        <h3>Elige un arcano</h3>
+        <p class="note">Las aristas no son decorativas: cada una es una regla de lectura. Si en una tirada aparecen dos cartas unidas aquí, su relación forma parte del mensaje.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LABORATORIO ================= -->
+<section id="laboratorio">
+  <div class="wrap">
+    <p class="kicker">IV · Laboratorio probabilístico</p>
+    <h2>¿Habla de ti o de la aritmética?</h2>
+    <p class="lede">El azar también tiene forma. Mirarla no le quita sentido al tarot; le quita la ilusión de que la carta "eligió" llegar. Lo que queda es lo importante: qué haces tú con la imagen que salió.</p>
+    <div class="lab-grid" id="cifras"></div>
+
+    <div class="lab-block">
+      <div class="txt">
+        <h3>El centro de la cruz no es azaroso</h3>
+        <p>En la tirada en cruz de Houdouin, el arcano central no se elige: se calcula sumando las cuatro cartas y reduciendo la suma. Hay <b id="nCombos">7.315</b> combinaciones posibles de cuatro arcanos, y las hemos contado todas.</p>
+        <p>Con la regla básica, <em>el Mago y la Papisa no pueden salir nunca</em>: la suma mínima es 1 + 2 + 3 + 4 = 10. Y cinco cartas centrales concentran más de la mitad de los resultados.</p>
+        <div class="seg" role="group" aria-label="Regla de reducción" style="margin-top:8px">
+          <button class="on" data-regla="A">Reducir dígitos</button>
+          <button data-regla="B">Restar 22</button>
+        </div>
+        <p class="note" id="reglaTxt" style="margin-top:12px"></p>
+      </div>
+      <svg class="chart" id="chartCruz" viewBox="0 0 660 300" role="img" aria-label="Distribución del arcano central en la tirada en cruz"></svg>
+    </div>
+
+    <div class="lab-block">
+      <div class="txt">
+        <h3>La ley de los grandes números</h3>
+        <p>Si se echan muchas tiradas de tres cartas, cada arcano tiende a salir el mismo número de veces. En pocas tiradas, en cambio, aparecen rachas: cartas que "insisten". Son normales. Simula y compruébalo.</p>
+        <div class="seg" role="group" aria-label="Número de tiradas">
+          <button data-sim="30">30</button><button data-sim="300">300</button><button data-sim="3000">3.000</button><button data-sim="30000">30.000</button>
+        </div>
+        <p class="note" id="simTxt" style="margin-top:12px">Elige cuántas tiradas simular.</p>
+      </div>
+      <svg class="chart" id="chartSim" viewBox="0 0 660 300" role="img" aria-label="Frecuencia simulada de cada arcano"></svg>
+    </div>
+
+    <div class="lab-block">
+      <div class="txt">
+        <h3>Cómo responde la nube</h3>
+        <p>Cuando proyectas una palabra en la nube, no hay oráculo: el texto se convierte en un número (una función hash, FNV-1a) y ese número, dividido entre 22, deja un resto. Ese resto es la carta. La misma palabra da siempre la misma carta; una letra distinta lo cambia todo.</p>
+        <p>Es una máquina de sincronicidad honesta: el sentido no está en el cálculo, sino en lo que la imagen te despierta.</p>
+      </div>
+      <div>
+        <div class="seedbox"><label class="sr" for="seedIn">Texto de prueba</label><input id="seedIn" placeholder="Escribe cualquier palabra" value="espejo"></div>
+        <p class="mono" id="seedOut"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MITO ================= -->
+<section id="mito">
+  <div class="wrap">
+    <p class="kicker">V · Capas del mito</p>
+    <h2>Cada época proyecta su origen</h2>
+    <p class="lede">El tarot nació como juego de naipes en el norte de Italia hacia 1440. Desde entonces, cada época le ha inventado un origen a la medida de su anhelo: Egipto, la Cábala, los gitanos, los cátaros, la geometría sagrada. Esas leyendas no son verdad histórica, pero sí son datos psicológicos: muestran cómo funcionan las cartas como pantalla de proyección. Separar las capas es el primer ejercicio de discernimiento.</p>
+    <div class="legend"><span class="d">Dato documentado</span><span class="h">Hipótesis razonable</span><span class="s">Sistema simbólico</span><span class="m">Mito de origen</span></div>
+    <div class="tl" id="timeline"></div>
+  </div>
+</section>
+
+<!-- ================= COLORES ================= -->
+<section id="colores">
+  <div class="wrap">
+    <p class="kicker">VI · Los once colores</p>
+    <h2>El color también habla</h2>
+    <p class="lede">Jodorowsky distingue once colores en el Tarot de Marsella restaurado y propone para cada uno un sentido luminoso y otro sombrío. No es un código cerrado: es una pista para mirar. Aquí la reformulamos con nuestras palabras. Nuestras estampas son grabados casi monocromos, a la manera de Doré: la luz y la sombra ocupan el lugar del color. Esta tabla sirve para leer cualquier Marsella tradicional que tengas en la mano.</p>
+    <div class="colores" id="coloresGrid"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>
+      <p style="font-family:var(--display);font-size:1.3rem;color:var(--paper);margin:0 0 10px">Speculum <span style="color:var(--verm)">·</span> Arcanorum</p>
+      <p style="margin:0 0 10px">Una experiencia sobre los Arcanos Mayores del Tarot de Marsella, en diálogo con C. G. Jung, Sallie Nichols (<i>Jung y el Tarot</i>), Alejandro Jodorowsky y Marianne Costa (<i>La vía del Tarot</i>) y Wilfried Houdouin. Los textos son propios; las ideas de cada autor se citan y se reformulan.</p>
+      <p style="margin:0">Sin cookies, sin seguimiento, sin conexiones externas. Lo que escribes se queda en tu navegador.</p>
+    </div>
+    <div class="foot-links">
+      <button data-dlg="dlgFuentes">Fuentes</button>
+      <button data-dlg="dlgIA">Transparencia IA</button>
+      <button data-dlg="dlgImpressum">Impressum</button>
+      <button data-dlg="dlgDatenschutz">Protección de datos</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CÁMARA ================= -->
+<dialog id="camara" aria-label="Cámara del arcano">
+  <div class="cam">
+    <div class="cam-left">
+      <div class="cam-nav">
+        <button class="btn" id="camPrev" aria-label="Arcano anterior">←</button>
+        <button class="btn" id="camNext" aria-label="Arcano siguiente">→</button>
+      </div>
+      <div class="cam-card" id="camCard"></div>
+      <div class="hs-note" id="hsNote">Pasa la lente sobre la carta. Los puntos rojos señalan detalles que hablan.</div>
+    </div>
+    <div class="cam-right" id="camRight"></div>
+  </div>
+  <button class="x-close" id="camClose" aria-label="Cerrar">×</button>
+</dialog>
+
+<!-- ================= DIÁLOGOS ================= -->
+<dialog class="dlg" id="dlgDiario"><div class="dlg-in">
+  <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
+  <h2>Mi diario</h2>
+  <p class="note">Tus reflejos y lecturas guardados. Viven solo en este navegador: no se envían a ningún sitio. Si borras los datos del navegador, desaparecen.</p>
+  <p><button class="btn" id="diarioDescargar">Descargar (.txt)</button> <button class="btn" id="diarioBorrar">Borrar todo</button></p>
+  <div id="diarioList"></div>
+</div></dialog>
+
+<dialog class="dlg" id="dlgFuentes"><div class="dlg-in">
+  <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
+  <h2>Fuentes</h2>
+  <h3>Libros de referencia</h3>
+  <ul>
+    <li>Sallie Nichols, <i>Jung y el Tarot. Un viaje arquetípico</i>. Prólogo de Mary K. Greer, introducción de Laurens van der Post. Kairós (ed. original <i>Jung and Tarot</i>, 1980).</li>
+    <li>Alejandro Jodorowsky y Marianne Costa, <i>La vía del Tarot</i>. Siruela / Random House Mondadori, 2004.</li>
+    <li>Wilfried Houdouin, <i>Tarot de Marsella Edición Millennium. Compendium Tarologicum</i>, 2017.</li>
+  </ul>
+  <h3>Cómo se usan</h3>
+  <p>De Nichols tomamos la lectura junguiana por amplificación y la disposición del viaje en tres filas. De Jodorowsky y Costa, la gramática visual, la numerología en dos series de diez grados, los dúos, las parejas, los pares que suman XXI, los once colores y las estrategias de lectura. De Houdouin, los nombres históricos de las cartas, la tirada viva y la tirada en cruz. Sus tesis sobre el origen del tarot (geometría sagrada, transmisión iniciática) se presentan en "Capas del mito" como lo que son: hipótesis sin respaldo documental.</p>
+  <p>Ningún pasaje de estas obras se reproduce: los textos de la web son propios. Las referencias a los títulos de capítulo de Nichols ("creador y tramposo", "ángel oscuro"…) se citan como tales.</p>
+  <h3>Historia</h3>
+  <p>Para la historia del tarot seguimos el consenso de la investigación actual (origen como juego de triunfos en el norte de Italia, c. 1440; lectura adivinatoria documentada a finales del siglo XVIII), tal como lo resume también Mary K. Greer en su prólogo a Nichols.</p>
+</div></dialog>
+
+<dialog class="dlg" id="dlgIA"><div class="dlg-in">
+  <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
+  <h2>Transparencia sobre el uso de IA</h2>
+  <p>De acuerdo con el artículo 50 del Reglamento europeo de Inteligencia Artificial (EU AI Act), informamos de cómo se ha usado la IA en este proyecto.</p>
+  <h3>Imágenes</h3>
+  <p>Las estampas de los 22 arcanos son <b>imágenes generadas con IA</b> (Midjourney) bajo dirección artística humana, a partir de la iconografía tradicional del Tarot de Marsella y con un estilo inspirado en los grabados de Gustave Doré. Cada imagen se ha revisado y seleccionado a mano. Las estampas reinterpretan libremente la iconografía tradicional: donde difieren, el texto describe el modelo de Marsella.</p>
+  <h3>Textos y código</h3>
+  <p>Los textos y el código se han desarrollado con la asistencia de Claude (Anthropic) y han sido revisados, corregidos y aprobados por la autoría humana del proyecto, que asume su responsabilidad.</p>
+  <h3>En la página</h3>
+  <p>Esta web no ejecuta ningún modelo de IA mientras la usas. La respuesta de la nube y las tiradas se calculan con funciones matemáticas transparentes, explicadas en el Laboratorio.</p>
+</div></dialog>
+
+<dialog class="dlg" id="dlgImpressum"><div class="dlg-in">
+  <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
+  <h2>Impressum</h2>
+  <p>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</p>
+  <p><span class="ph">[Nombre y apellidos o razón social]</span><br><span class="ph">[Calle y número]</span><br><span class="ph">[Código postal] Berlin</span><br>Deutschland</p>
+  <h3>Kontakt</h3>
+  <p>E-Mail: <span class="ph">[correo de contacto]</span></p>
+  <h3>Registereintrag / USt-IdNr.</h3>
+  <p><span class="ph">[Si aplica: Registergericht, Registernummer, Umsatzsteuer-Identifikationsnummer]</span></p>
+  <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
+  <p><span class="ph">[Nombre y dirección]</span></p>
+</div></dialog>
+
+<dialog class="dlg" id="dlgDatenschutz"><div class="dlg-in">
+  <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
+  <h2>Protección de datos · Datenschutzerklärung</h2>
+  <h3>Responsable</h3>
+  <p>El responsable del tratamiento en el sentido del RGPD (DSGVO) es la persona indicada en el Impressum.</p>
+  <h3>Lo que esta web no hace</h3>
+  <p>No usa cookies, no usa herramientas de análisis ni de seguimiento, no carga fuentes, scripts ni imágenes de servidores externos y no envía a ningún servidor lo que escribes.</p>
+  <h3>Almacenamiento local</h3>
+  <p>Tus reflejos, lecturas guardadas y secretos descubiertos se almacenan únicamente en el almacenamiento local de tu navegador (localStorage), en tu dispositivo. No tenemos acceso a ellos. Puedes borrarlos en cualquier momento desde "Mi diario" o desde la configuración de tu navegador. Base jurídica: § 25 Abs. 2 Nr. 2 TDDDG (almacenamiento estrictamente necesario para una función solicitada por ti).</p>
+  <h3>Alojamiento</h3>
+  <p>La web se aloja en Firebase Hosting, un servicio de Google Ireland Limited (Gordon House, Barrow Street, Dublín 4, Irlanda). Al visitarla, el servidor procesa técnicamente tu dirección IP y datos de la petición para entregar la página y garantizar su seguridad. Base jurídica: art. 6.1.f RGPD (interés legítimo en un funcionamiento seguro). Puede producirse una transferencia a EE. UU., amparada por el EU-U.S. Data Privacy Framework. <span class="ph">[Revisar y completar según la configuración real del proyecto Firebase.]</span></p>
+  <h3>Tus derechos</h3>
+  <p>Tienes derecho de acceso, rectificación, supresión, limitación, portabilidad y oposición (arts. 15 a 21 RGPD), así como a presentar una reclamación ante una autoridad de control, por ejemplo la Berliner Beauftragte für Datenschutz und Informationsfreiheit.</p>
+</div></dialog>
+
+<div class="cal-box" id="calBox"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   DATOS
+   Para incorporar las estampas: en cada arcano, img:"data:image/webp;base64,…"
+   Las coordenadas de los puntos (hs) están en % de la carta y deben
+   recalibrarse sobre las imágenes finales: abre la web con ?calibrar
+   ===================================================================== */
+const ROMAN=['','I','II','III','IIII','V','VI','VII','VIII','VIIII','X','XI','XII','XIII','XIIII','XV','XVI','XVII','XVIII','XVIIII','XX','XXI'];
+
+const ARC=[
+{n:0,es:"El Loco",hist:"LE MAT",kw:"libertad, impulso, viaje",sombra:"huida, dispersión, negar todo límite",gaze:"L",img:"",
+mirar:"Es el único que camina. Avanza en el sentido de la lectura, con el hato al hombro: lleva consigo todo lo que es. Un animal le empuja o le muerde la pierna, el instinto que no le deja quedarse quieto. Su bastón toca el suelo: se mueve sin perder del todo la tierra. No tiene número porque no ocupa un lugar en la serie: la atraviesa entera.",
+amp:"Desciende del bufón de corte, el único que podía decir la verdad al rey, y sobrevive en el Joker de la baraja moderna. Es pariente del Parsifal que encuentra el Grial porque ignora que no puede, del loco sagrado de las tradiciones místicas y del trickster de los mitos. En clave junguiana es la energía psíquica antes de tomar forma: el principio y el final del viaje de individuación.",
+q:["¿Hacia dónde caminarías si nadie te mirase?","¿Qué llevas en el hato que ya no necesitas?","¿Qué te muerde la pierna y te obliga a moverte?"],
+hs:[{x:33,y:34,t:"El hato",d:"Todo lo que es cabe en una bolsa. ¿Equipaje o memoria?"},{x:62,y:64,t:"El animal",d:"El instinto empuja: no hay viaje sin un poco de urgencia."},{x:42,y:31,t:"El gorro de cascabeles",d:"El bufón suena al moverse: la libertad se oye."}]},
+
+{n:1,es:"El Mago",hist:"LE BATELEVR",kw:"comenzar, elegir, habilidad",sombra:"truco, dispersión, manipulación",gaze:"L",img:"",
+mirar:"Sobre la mesa hay de todo: cubiletes, dados, un cuchillo, monedas, una bolsa. Son los cuatro palos en miniatura y todavía no ha decidido qué usar. Una mano sostiene la varita y la otra una moneda: une lo de arriba y lo de abajo. La mesa muestra tres patas; la cuarta queda fuera de la carta, como si el gesto se completara en el espacio de quien mira.",
+amp:"Bateleur es el prestidigitador de feria, no el mago ceremonial que inventó el ocultismo del siglo XIX, y esa ambigüedad es su riqueza. Le corresponden Hermes, dios de los comienzos, de los caminos y de los ladrones, y el Mercurio alquímico que pone en marcha la obra. Nichols lo llama creador y tramposo: la consciencia que empieza a ordenar el mundo y puede engañarse con sus propios trucos.",
+q:["¿Qué tienes ya sobre la mesa que no estás usando?","Si tuvieras que empezar con un solo objeto, ¿cuál sería?","¿Dónde termina tu talento y empieza tu truco?"],
+hs:[{x:54,y:37,t:"El sombrero en lemniscata",d:"El ala dibuja un ocho tumbado, el infinito como horizonte de quien empieza. La Fuerza lleva el mismo."},{x:47,y:69,t:"La mesa de tres patas",d:"La cuarta pata no aparece: falta un apoyo, o lo pone quien mira."},{x:30,y:33,t:"La varita",d:"Una mano arriba y otra abajo: el Mago es un canal entre planos."}]},
+
+{n:2,es:"La Papisa",hist:"LA PAPESSE",kw:"gestación, saber interior, silencio",sombra:"frialdad, cierre, juicio",gaze:"R",img:"",
+mirar:"Está sentada y quieta, envuelta en capas: velo, manto, túnica. El libro abierto sobre sus rodillas no lo lee: lo incuba. Detrás, una cortina separa lo que se muestra de lo que se guarda. Es el grado dos: acumular sin actuar todavía, preparar en silencio lo que vendrá.",
+amp:"La leyenda de la papisa Juana, escándalo de una mujer en el trono de Pedro, se cruza con la sacerdotisa de los misterios, con Isis velada y con la Sofía de los gnósticos. Nichols la lee como la mujer que sigue su vocación aunque la deje sola; Mary Greer propone verla hoy como la introversión que confía en la intuición. Para Jung sería el ánima sabia, la puerta hacia el inconsciente.",
+q:["¿Qué estás incubando que todavía no debe salir?","¿Qué libro tuyo está escrito pero sin leer?","¿Tu silencio protege o encierra?"],
+hs:[{x:51,y:46,t:"El libro abierto",d:"No lo lee: lo gesta. El saber que todavía no se dice."},{x:50,y:18,t:"La cortina",d:"Separa el santuario del mundo. Lo velado no es lo prohibido, sino lo que madura."},{x:50,y:28,t:"La tiara",d:"Triple corona sobre el velo: autoridad que no se exhibe, se guarda."}]},
+
+{n:3,es:"La Emperatriz",hist:"LIMPERATRISE",kw:"creación, fertilidad, expresión",sombra:"exceso, vanidad, dispersión",gaze:"F",img:"",
+mirar:"Es la primera figura que nos mira de frente. Tras la quietud de la Papisa, aquí todo brota: alas detrás del trono, un cetro florido, un escudo con un águila que todavía no ha alzado el vuelo. Es el grado tres: la energía acumulada estalla en forma, sin saber aún hacia dónde.",
+amp:"Deméter, que hace crecer los campos; Venus, que engendra; la Gran Madre que Nichols llama reina del cielo y de la tierra. Su reverso es la madre que retiene, porque el mismo arquetipo nutre y devora. En el arte medieval, la Virgen en majestad sostiene al mundo como ella sostiene el escudo: lo creado como hijo.",
+q:["¿Qué quiere nacer a través de ti?","¿Dónde se vuelve exceso tu abundancia?","¿Qué creas cuando no buscas resultados?"],
+hs:[{x:74,y:47,t:"El águila del escudo",d:"Plegada, en reposo: la creación aún no ha decidido su vuelo. Compárala con la del Emperador."},{x:16,y:36,t:"Las alas",d:"Detrás del trono: lo que crea no está del todo en la tierra."},{x:36,y:25,t:"El cetro",d:"Apoyado, no empuñado: el poder que florece en vez de imponerse."}]},
+
+{n:4,es:"El Emperador",hist:"LEMPEREVR",kw:"estabilidad, orden, dominio",sombra:"rigidez, control, autoritarismo",gaze:"L",img:"",
+mirar:"Se apoya en el trono más que sentarse: tiene la seguridad de quien no necesita demostrar nada. Sus piernas cruzadas dibujan un cuatro, el número de la estabilidad. El águila de su escudo está en el suelo y ya tiene forma: la creación de la Emperatriz convertida en ley.",
+amp:"Zeus, rey del orden olímpico, y el pater familias romano; para Nichols, el padre de la civilización que funda ciudades y leyes. Su sombra es el tirano y el padre que no deja crecer. Jung describe el arquetipo paterno como estructura que da forma al caos de la psique: imprescindible y, si se absolutiza, asfixiante.",
+q:["¿Qué estructura te sostiene y cuál te encierra?","¿Dónde necesitas poner un límite claro?","¿Qué autoridad has heredado sin revisarla?"],
+hs:[{x:59,y:53,t:"Las piernas cruzadas",d:"Forman la cifra 4: el cuadrado, la tierra, lo que no se mueve."},{x:71,y:83,t:"A sus pies",d:"En el Marsella, el escudo con el águila descansa en el suelo: el poder que ya no necesita defenderse."},{x:56,y:38,t:"El cetro con orbe",d:"Gobierna lo material: el orbe es la tierra en su mano."}]},
+
+{n:5,es:"El Papa",hist:"LE PAPE",kw:"mediación, enseñanza, ideal",sombra:"dogma, hipocresía, dependencia",gaze:"F",img:"",
+mirar:"Es el primero que tiene a quién hablar: dos pequeños discípulos, de espaldas en primer plano, le escuchan. Entre dos columnas, bendice con una mano y sostiene una cruz triple con la otra. Es el grado cinco: aparece un ideal, y alguien hace de puente hacia él.",
+amp:"Pontífice significa literalmente el que hace puentes. Le acompañan el hierofante de Eleusis, el maestro zen, el analista que acompaña: todo mediador entre lo humano y lo que lo sobrepasa. Nichols lo llama el rostro visible de Dios; su sombra es la institución que sustituye la experiencia por la obediencia.",
+q:["¿Quién te enseña hoy y a quién enseñas tú?","¿Qué creencia repites sin haberla vivido?","¿Hacia qué ideal estás tendiendo un puente?"],
+hs:[{x:34,y:80,t:"Los dos discípulos",d:"Los vemos de espaldas: somos uno más en el grupo que escucha."},{x:37,y:33,t:"La mano que bendice",d:"Transmite, no posee: el saber circula."},{x:67,y:27,t:"La cruz triple",d:"Tres travesaños: cuerpo, alma y espíritu, o tres mundos unidos."}]},
+
+{n:6,es:"El Enamorado",hist:"LAMOVREVX",kw:"elección, unión, deseo",sombra:"indecisión, dependencia, confusión",gaze:"F",img:"",
+mirar:"Tres personas y un ángel. El joven está en medio, entre dos mujeres que le tocan o le reclaman; sus pies apuntan en direcciones distintas. Arriba, Cupido apunta su flecha desde un sol. Es el grado seis: descubrir al otro, hacer lo que se ama. Su nombre, LAMOVREVX, es uno de los dos que no cambiaron en siglos.",
+amp:"La escena se ha leído como la elección entre vicio y virtud, como Hércules en la encrucijada, o entre la madre y la amada. Nichols habla del error dorado de Cupido: el amor nos elige antes de que elijamos. En clave junguiana, es el encuentro con el ánima o el ánimus que saca al yo de su centro.",
+q:["¿Entre qué dos voces estás ahora mismo?","¿Qué haces solo porque te da placer?","¿Qué elección estás dejando que otros hagan por ti?"],
+hs:[{x:48,y:21,t:"Cupido en el sol",d:"La flecha viene de arriba: el deseo no se decide, se recibe."},{x:36,y:60,t:"Las manos",d:"Cada mujer toca al joven de un modo distinto. Cada vínculo tiene su gesto."},{x:50,y:80,t:"Los pies",d:"Apuntan a lugares distintos: el cuerpo ya ha empezado a elegir."}]},
+
+{n:7,es:"El Carro",hist:"LECHARIOR",kw:"acción, avance, voluntad",sombra:"conquista vacía, arrogancia, atropello",gaze:"L",img:"",
+mirar:"Un príncipe coronado se alza en un carro cuadrado, bajo un dosel. Dos caballos tiran, uno azul y otro rojo, y miran a lados distintos. No lleva riendas. Es el grado siete: la acción en el mundo, que avanza no por control sino por acuerdo entre fuerzas opuestas.",
+amp:"En el Fedro de Platón, el auriga conduce dos caballos, uno noble y otro indómito: es la imagen del alma. Los carros triunfales del Renacimiento desfilaban cargados de alegorías, origen probable de los triunfos del tarot, y sobreviven en los tiovivos. Nichols dice que el Carro nos lleva a casa: la conquista exterior que es también un regreso.",
+q:["¿Qué dos fuerzas tiran de ti en direcciones distintas?","¿Hacia dónde avanzas sin riendas?","¿Qué victoria buscas, y para qué?"],
+hs:[{x:80,y:70,t:"Dos caballos, dos direcciones",d:"Uno azul, otro rojo; ninguno lleva riendas. El avance nace del acuerdo, no del látigo."},{x:49,y:47,t:"Las caras en los hombros",d:"Dos lunas con rostro: lo que mira atrás y lo que mira adelante."},{x:47,y:27,t:"El cielo abierto",d:"En el Marsella, un dosel cubre al conductor. Aquí es una abertura de luz: actúa bajo algo mayor que él."}]},
+
+{n:8,es:"La Justicia",hist:"IVSTICE",kw:"equilibrio, discernimiento, verdad",sombra:"rigidez, juicio implacable, perfeccionismo",gaze:"F",img:"",
+mirar:"Frontal, entre columnas, con la espada vertical y la balanza. Es el grado ocho: perfección receptiva, nada sobra y nada falta. A diferencia de la alegoría moderna, no lleva venda: ve. Bajo la túnica asoma un pie, como si estuviera a punto de levantarse.",
+amp:"Maat, la pluma egipcia que pesa el corazón de los muertos; Temis y Astrea, la justicia que abandonó la tierra por culpa de los hombres. Nichols pregunta si la justicia existe: la humana es imperfecta, y la carta habla más bien de un equilibrio interior que hay que sostener cada día.",
+q:["¿Qué estás pesando, y con qué criterio?","¿Dónde eres más duro contigo que con los demás?","¿Qué tendrías que cortar para recuperar el equilibrio?"],
+hs:[{x:78,y:53,t:"La balanza",d:"En equilibrio, no en reposo: equilibrar es un acto continuo."},{x:27,y:34,t:"La espada vertical",d:"Corta lo que sobra. Discernir es separar."},{x:52,y:41,t:"Sin venda",d:"La Justicia del tarot mira. Juzgar sin ver sería otra cosa."}]},
+
+{n:9,es:"El Ermitaño",hist:"LERMITE",kw:"crisis, búsqueda, sabiduría",sombra:"aislamiento, amargura, huida del mundo",gaze:"R",img:"",
+mirar:"Camina hacia la izquierda, hacia atrás en la serie, hacia el pasado. Alza un farol que su propio manto oculta a medias: su luz es para quien viene detrás. Es el grado nueve: la crisis fértil del final, retirarse para que algo nuevo pueda empezar.",
+amp:"Diógenes con su lámpara, buscando un hombre honesto; Cronos y Saturno, el tiempo viejo que madura las cosas; los padres del desierto. Nichols pregunta si hay alguien ahí: la soledad del buscador. Jung lo relacionaría con el arquetipo del viejo sabio, el guía interior que aparece cuando el yo ya no sabe.",
+q:["¿Qué necesitas dejar atrás para poder ver?","¿Para quién llevas tu luz?","¿Tu retiro es búsqueda o refugio?"],
+hs:[{x:68,y:36,t:"El farol",d:"Medio oculto por el manto: ilumina hacia atrás, para quien le sigue."},{x:39,y:61,t:"El manto",d:"Capas de experiencia; por dentro, otro color."},{x:27,y:83,t:"El bastón",d:"Toca la tierra: la sabiduría que no pierde el suelo."}]},
+
+{n:10,es:"La Rueda de Fortuna",hist:"LA ROVE DE FORTVNE",kw:"ciclo, cambio, oportunidad",sombra:"fatalismo, inestabilidad, pasividad",gaze:"-",img:"",
+mirar:"Una rueda con manivela y nadie que la gire. Un animal sube, otro baja, y arriba una esfinge coronada permanece inmóvil con su espada. Es el grado diez: el fin de un ciclo y el anuncio del siguiente. La pregunta está en la manivela: ¿quién la gira?",
+amp:"La Fortuna de Boecio, que en La consolación de la filosofía hace girar su rueda indiferente a reyes y mendigos; la rueda del samsara; el carro del tiempo. Nichols titula su capítulo con un grito de socorro: el yo descubre que no gobierna los ciclos. La esfinge sugiere otra salida: no huir del giro, sino situarse en su centro.",
+q:["¿En qué parte de la rueda estás: subiendo, bajando o arriba?","¿Qué ciclo se está cerrando en tu vida?","Si la manivela fuese tuya, ¿la girarías?"],
+hs:[{x:34,y:73,t:"La manivela",d:"Una rueda con mango pide una mano. Nadie la sostiene. ¿O eres tú?"},{x:49,y:29,t:"Lo que corona la rueda",d:"En el Marsella, una esfinge coronada y armada: lo que no gira con la rueda."},{x:23,y:51,t:"Los que suben y bajan",d:"Mitad animales, mitad humanos: todos estamos en el giro."}]},
+
+{n:11,es:"La Fuerza",hist:"LA FORCE",kw:"energía profunda, nuevo comienzo, integración",sombra:"represión, violencia, dominio del instinto",gaze:"F",img:"",
+mirar:"Abre la boca del león sin esfuerzo aparente, y no sabemos si se la abre o se la cierra. Lleva el mismo sombrero en lemniscata que el Mago: es el segundo comienzo, el de la segunda serie. El Mago empieza con habilidad; la Fuerza empieza desde el fondo, desde el animal.",
+amp:"Hércules contra el león de Nemea, pero sin maza: la fuerza que no mata al instinto, sino que lo integra. Daniel en el foso de los leones, la doncella que amansa al unicornio. Nichols pregunta: ¿fuerza de quién? En términos junguianos, la relación entre el yo y la energía instintiva que, reprimida, se vuelve en contra.",
+q:["¿Qué instinto tuyo necesita ser escuchado, no domado?","¿Dónde usas la fuerza cuando bastaría la calma?","¿Qué empieza en ti desde abajo, y no desde la cabeza?"],
+hs:[{x:50,y:25,t:"La cabeza",d:"En el Marsella lleva el mismo sombrero en lemniscata que el Mago: dos comienzos, dos series."},{x:48,y:37,t:"¿Abre o cierra?",d:"El gesto es ambiguo a propósito: integrar no es vencer."},{x:19,y:47,t:"El león",d:"Pequeño, casi doméstico: el instinto asumido no da miedo."}]},
+
+{n:12,es:"El Colgado",hist:"LE PENDV",kw:"pausa, entrega, otra perspectiva",sombra:"parálisis, victimismo, sacrificio estéril",gaze:"F",img:"",
+mirar:"Cuelga de un pie, con la otra pierna cruzada detrás y las manos escondidas a la espalda. Nadie parece obligarle: su cara está serena. Los árboles tienen las ramas cortadas, no crecerán más hacia fuera. Es la segunda gestación: detenerse del todo y mirar el mundo del revés.",
+amp:"Odín pasó nueve noches colgado del árbol del mundo para obtener las runas. La pintura infamante de la Italia renacentista colgaba en efigie, boca abajo, a traidores y deudores. Nichols titula su capítulo intriga: una carta que desconcierta. Jung vería la suspensión voluntaria del yo, el sacrificio que deja hablar al inconsciente.",
+q:["¿Qué ves si das la vuelta a tu problema?","¿A qué te estás entregando, y a qué te estás resignando?","¿Qué esperas que ocurra si dejas de hacer?"],
+hs:[{x:47,y:27,t:"Atado por un pie",d:"Un solo punto de sujeción: lo justo para no caer, lo justo para soltar todo lo demás."},{x:48,y:45,t:"Las manos ocultas",d:"No actúa. Lo que tiene que hacer es no hacer."},{x:59,y:26,t:"El árbol",d:"En el Marsella, dos árboles con las ramas cortadas: renunciar a crecer hacia fuera para crecer hacia dentro."}]},
+
+{n:13,es:"El Arcano sin nombre",hist:"",kw:"transformación, final, limpieza",sombra:"destrucción, miedo al cambio, aferrarse",gaze:"R",img:"",
+mirar:"Es la única carta sin nombre. Un esqueleto de color carne siega una tierra oscura donde brotan manos, pies y cabezas, una de ellas coronada. No hay cadáveres: hay brotes. Es el estallido de la segunda serie: lo que se corta deja sitio.",
+amp:"La danza macabra medieval, en la que la muerte iguala al rey y al campesino; Cronos con su hoz; la nigredo alquímica, la putrefacción que precede a la piedra. Nichols la llama el enemigo, porque así la vive el yo. La tradición no la nombra, como si lo que transforma de verdad no se dejara decir.",
+q:["¿Qué ha terminado ya, aunque no lo aceptes?","¿Qué brota en el terreno que acabas de despejar?","¿Por qué crees que esta carta no tiene nombre?"],
+hs:[{x:50,y:96,t:"El espacio sin nombre",d:"Donde las demás llevan su nombre, aquí hay un hueco. Lo innombrable también es un dato."},{x:49,y:45,t:"La figura que siega",d:"En el Marsella es un esqueleto color carne: no un muerto, sino la estructura que queda cuando cae lo superfluo."},{x:13,y:72,t:"Las cabezas que brotan",d:"Una lleva corona: el cambio no respeta jerarquías."}]},
+
+{n:14,es:"Templanza",hist:"TENPERANCE",kw:"circulación, cuidado, equilibrio vivo",sombra:"tibieza, estancamiento, evitar el conflicto",gaze:"L",img:"",
+mirar:"Un ángel vierte un líquido de un jarro a otro, y la corriente parece desafiar la gravedad. Es el primer ser alado después del Arcano XIII: tras la siega, algo circula. Es el grado cuatro de la segunda serie: la estabilidad ya no es quietud, es flujo.",
+amp:"Templar es mezclar en su justa medida: el vino con el agua, el metal caliente con el agua fría. Iris, la mensajera del arco iris; el ángel custodio. Nichols la llama alquimia celestial, la unión de opuestos que Jung consideraba el centro de la obra psíquica.",
+q:["¿Qué necesita circular en tu vida en vez de acumularse?","¿Qué dos partes tuyas podrías mezclar?","¿Qué cuidas sin que nadie lo vea?"],
+hs:[{x:56,y:55,t:"Los dos jarros",d:"El chorro va en diagonal, quizá hacia arriba: una física que no es la nuestra."},{x:33,y:44,t:"Las alas",d:"La primera figura alada después del XIII: la protección que sigue al corte."},{x:52,y:37,t:"La flor en la frente",d:"Un pensamiento que florece."}]},
+
+{n:15,es:"El Diablo",hist:"LE DIABLE",kw:"deseo, energía, sombra creativa",sombra:"dependencia, adicción, engaño",gaze:"F",img:"",
+mirar:"Una figura con cuernos, alas de murciélago y atributos de ambos sexos, de pie sobre un pedestal. Abajo, dos diablillos atados por el cuello, aunque la cuerda está floja: podrían soltarse. Es el grado cinco de la segunda serie: la mediación, pero desde abajo.",
+amp:"Pan, el dios cabra de la naturaleza salvaje; Lucifer, el portador de luz; Baphomet, invención del ocultismo del siglo XIX. Es la única carta de la que Jung habló en concreto: vio en ella una figura hermafrodita, quizá el oro de la alquimia, la unión de opuestos que la mentalidad cristiana teme. Nichols lo llama ángel oscuro: la sombra que guarda energía creativa.",
+q:["¿Qué te ata que en realidad podrías soltar?","¿Qué deseo escondes porque te asusta su fuerza?","¿Qué energía de tu sombra podría volverse creativa?"],
+hs:[{x:46,y:81,t:"Las cuerdas flojas",d:"Los atados podrían quitarse el lazo. La dependencia también es un acuerdo."},{x:60,y:45,t:"La antorcha",d:"Lleva luz: Lucifer significa portador de luz."},{x:47,y:31,t:"El cuerpo doble",d:"Femenino y masculino a la vez: Jung lo leyó como unión de opuestos."}]},
+
+{n:16,es:"La Torre",hist:"LA MAISON DIEV",kw:"apertura, liberación, irrupción",sombra:"derrumbe, caos, orgullo herido",gaze:"-",img:"",
+mirar:"Su nombre no es la torre, sino la Casa de Dios. Una llama o una pluma desciende del cielo y levanta la corona de la torre como una tapa. Dos figuras caen, o salen, con las manos hacia la tierra. Llueven esferas de colores. Es el placer del seis en la segunda serie: lo encerrado por fin se abre.",
+amp:"Babel, la torre del orgullo que se dispersa en lenguas; el rayo de Zeus; el castillo de los cuentos que se derrumba cuando se rompe el hechizo. Nichols lo llama el golpe de liberación: lo que parece catástrofe derriba una estructura que ya era prisión. Jung habla de la irrupción del inconsciente cuando el yo se ha encerrado demasiado.",
+q:["¿Qué estructura de tu vida era ya una prisión?","¿Qué saldría si se abriera la tapa?","¿Caen, o están saliendo?"],
+hs:[{x:46,y:45,t:"La corona levantada",d:"No se derrumba la torre: se le abre la cabeza. Más apertura que destrucción."},{x:43,y:89,t:"¿Caen o salen?",d:"Tocan la tierra con las manos: también podrían estar aterrizando."},{x:59,y:55,t:"Las esferas de colores",d:"Llueven como semillas o como luz liberada."}]},
+
+{n:17,es:"La Estrella",hist:"LESTOILLE",kw:"confianza, generosidad, lugar propio",sombra:"ingenuidad, dispersión, utopía",gaze:"L",img:"",
+mirar:"La primera figura desnuda. Arrodillada junto al agua, vierte dos jarros: uno en la corriente y otro en la tierra. Encima, una gran estrella y siete menores; un pájaro se posa en un árbol. Es la acción del siete en la segunda serie: actuar en el mundo dando, encontrar el propio lugar.",
+amp:"Después de la Torre llega la calma: la esperanza que quedó en el fondo de la caja de Pandora, la estrella de los Magos, Ishtar y Venus, astro de la mañana. Nichols la llama un rayo de esperanza. Su grafía antigua, LESTOILLE, es para Houdouin una prueba de antigüedad; para la filología, una variante que conviene leer con cautela.",
+q:["¿Qué das sin esperar nada a cambio?","¿Dónde está tu lugar en el mundo?","¿Qué estrella sigues?"],
+hs:[{x:50,y:39,t:"Ocho estrellas",d:"Una grande y siete pequeñas: ocho luces, un cielo ordenado."},{x:41,y:80,t:"Dos jarros, dos destinos",d:"Uno vierte al río y otro a la tierra: dar al flujo y dar a lo concreto."},{x:89,y:77,t:"El pájaro",d:"Un testigo en lo alto del árbol: el alma que observa."}]},
+
+{n:18,es:"La Luna",hist:"LA LVNE",kw:"intuición, sueño, receptividad",sombra:"ilusión, miedo, confusión",gaze:"L",img:"",
+mirar:"La luna, de perfil dentro de un disco, atrae gotas desde la tierra. Abajo, dos perros aúllan entre dos torres, y de un estanque emerge un cangrejo. No hay figura humana: es el paisaje de la noche psíquica. Es la perfección receptiva del ocho en la segunda serie.",
+amp:"Selene, Ártemis y Hécate: la luna creciente, la llena y la oscura. Los perros recuerdan a Cerbero, guardián del umbral; el cangrejo sale del agua primordial, lo más antiguo que hay en nosotros. Nichols pregunta si es doncella o amenaza: la luna ilumina y engaña con la misma luz.",
+q:["¿Qué sueño se repite últimamente?","¿Qué asoma del fondo cuando te quedas quieto?","¿Qué te da miedo, y qué te atrae, de lo desconocido?"],
+hs:[{x:48,y:83,t:"El cangrejo",d:"Sale del agua profunda: lo arcaico que sube a la superficie."},{x:50,y:55,t:"Los dos perros",d:"Domésticos y salvajes a la vez, aúllan a la misma luz."},{x:50,y:41,t:"Las gotas que suben",d:"La luna atrae: la receptividad también tiene su gravedad."}]},
+
+{n:19,es:"El Sol",hist:"LE SOLEIL",kw:"alegría, claridad, nueva construcción",sombra:"deslumbramiento, egocentrismo, dependencia",gaze:"F",img:"",
+mirar:"Un gran sol con rostro derrama gotas de colores sobre dos niños, casi gemelos, que se tocan ante un muro bajo. Es la crisis del nueve vista desde la luz: no un final solitario, como el del Ermitaño, sino una regeneración compartida. El muro protege lo que empieza.",
+amp:"Apolo, Helios, Ra; los Dióscuros, gemelos inseparables; la rubedo alquímica, la obra en rojo y oro. Nichols lo llama centro radiante. Para Jung, el sol simboliza el sí-mismo y una consciencia que da calor sin abrasar: la totalidad que se reconoce en el otro.",
+q:["¿Con quién compartes tu luz?","¿Qué estás construyendo de nuevo?","¿Qué de ti merece salir a la claridad?"],
+hs:[{x:41,y:80,t:"Los gemelos",d:"Uno toca al otro: la alegría como encuentro, no como posesión."},{x:72,y:83,t:"El muro bajo",d:"Protege lo nuevo mientras crece."},{x:51,y:47,t:"Las gotas de colores",d:"El sol da sin elegir a quién."}]},
+
+{n:20,es:"El Juicio",hist:"LE IVGEMENT",kw:"llamada, despertar, vocación",sombra:"culpa, juicio, deseo sin realizar",gaze:"F",img:"",
+mirar:"Un ángel toca la trompeta desde las nubes. Abajo, una figura de espaldas se eleva de una tumba entre un hombre y una mujer que rezan. Es el grado diez de la segunda serie: lo que empezó a girar con la Rueda termina aquí con una llamada irresistible.",
+amp:"El Juicio Final de los tímpanos románicos, la resurrección de los muertos, el ave fénix. Nichols lo titula una llamada: la vocación que despierta. En lenguaje junguiano, la emergencia de una consciencia nueva que integra padre y madre, pasado y futuro.",
+q:["¿Qué llamada estás oyendo y aún no respondes?","¿Qué parte de ti está saliendo de la tumba?","¿Qué heredaste de tus padres que ahora puedes elegir?"],
+hs:[{x:67,y:20,t:"La trompeta",d:"Un sonido que despierta: no se elige, se responde."},{x:48,y:78,t:"La figura de espaldas",d:"No vemos su rostro: puede ser cualquiera. Puedes ser tú."},{x:87,y:80,t:"La pareja que reza",d:"Madre y padre, o lo femenino y lo masculino, asisten al nacimiento."}]},
+
+{n:21,es:"El Mundo",hist:"LE MONDE",kw:"realización, totalidad, plenitud",sombra:"estancamiento, perfeccionismo, no saber cerrar",gaze:"L",img:"",
+mirar:"Una figura danza dentro de una mandorla de hojas. En las cuatro esquinas, un ángel, un águila, un león y un buey. Es la última carta numerada y la llave de la orientación: los cuatro seres son los cuatro palos, los cuatro elementos y las cuatro funciones de la psique en torno a un centro.",
+amp:"El tetramorfo de Ezequiel y del Apocalipsis, los cuatro evangelistas alrededor del Cristo en majestad; el alma del mundo; el mandala que Jung reconoció en los dibujos de sus pacientes como imagen del sí-mismo. Nichols la llama una ventana a la eternidad: el final del viaje, que es también un nuevo comienzo.",
+q:["¿Qué has completado y aún no celebras?","¿Qué esquina de tu mundo falta por integrar?","Si tu vida fuera una danza, ¿en qué paso estarías?"],
+hs:[{x:47,y:47,t:"La mandorla",d:"Una almendra de hojas: la vida contenida y protegida."},{x:14,y:69,t:"Los cuatro seres",d:"Ángel, águila, león y buey: cuatro elementos, cuatro palos, cuatro funciones."},{x:63,y:33,t:"La varita",d:"La herramienta del Mago sigue aquí, pero ya danza."}]}
+];
+
+const PAREJAS=[[0,21],[1,11],[2,5],[3,4],[7,17],[8,9],[18,19]];
+const PAREJA_TXT={"0-21":"la energía sin forma y la realización total","1-11":"los dos comienzos: la habilidad y el instinto","2-5":"el saber que se guarda y el saber que se transmite","3-4":"crear y dar forma estable a lo creado","7-17":"conquistar el mundo y encontrar en él el propio lugar","8-9":"el equilibrio presente y la sabiduría que se retira","18-19":"la luz que recibe y la luz que irradia"};
+const DUO_TXT={1:"dos comienzos: la mano que empieza y la fuerza que despierta",2:"gestación: acumular dentro, suspenderse fuera",3:"estallido: crear y desbrozar",4:"estabilidad: en la tierra y en el flujo",5:"mediación: el puente de luz y el puente de sombra",6:"placer y apertura: elegir lo que se ama, liberar lo encerrado",7:"acción: conquistar el mundo, encontrar el propio lugar",8:"perfección receptiva: el equilibrio y el reflejo",9:"crisis y regeneración: la lámpara y el sol",10:"fin y llamada: el ciclo que gira, la consciencia que despierta"};
+const GRADO_TXT={1:"potencia total sin experiencia: todo está por hacer",2:"acumulación y gestación: preparar sin actuar",3:"estallido: la energía sale, todavía sin rumbo",4:"estabilidad y dominio",5:"un ideal nuevo y un puente hacia él",6:"placer, unión, descubrimiento del otro",7:"acción en el mundo",8:"perfección receptiva: nada sobra ni falta",9:"crisis fértil: un final que prepara",10:"fin de un ciclo y umbral del siguiente"};
+
+const SECRETOS=[
+{t:"El Loco no tiene número",d:"No ocupa un lugar en la serie: puede ser el primero, el último o el que la recorre entera. En la baraja moderna sobrevive como el Joker."},
+{t:"Un sombrero para dos",d:"El Mago (I) y la Fuerza (XI) llevan el mismo sombrero en forma de lemniscata. Son los dos comienzos de las dos series de diez."},
+{t:"El arcano sin nombre",d:"El XIII es la única carta sin nombre impreso. La llamamos Muerte por costumbre, pero la tradición dejó el hueco vacío."},
+{t:"Todo suma XXI",d:"Loco y Mundo, Mago y Juicio, Papisa y Sol… Once parejas se miran como en un espejo y suman 21. Búscalas en el grafo."},
+{t:"Nombres que resistieron",d:"En los Marsella antiguos se lee LESTOILLE, LEMPEREVR, LE PENDV. Según Houdouin, solo LAMOVREVX y LA MAISON DIEV conservaron su forma en todas las ediciones."},
+{t:"El Mago nunca será centro",d:"En la tirada en cruz, el centro es la suma reducida de cuatro cartas. La mínima es 1 + 2 + 3 + 4 = 10: ni el Mago ni la Papisa pueden salir. Compruébalo en el laboratorio."},
+{t:"Jung, 1933",d:"En un seminario sobre imaginación activa, Jung describió los arcanos como imágenes arquetípicas útiles para leer el momento presente. En 1950 propuso estudiar el tarot junto a la astrología, la geomancia y el I Ching."},
+{t:"Once colores",d:"Jodorowsky distingue once colores en el Marsella restaurado, del negro al violeta. El violeta casi no aparece: es el color más secreto."},
+{t:"Un juego antes que un oráculo",d:"Las primeras barajas de triunfos, hacia 1440, eran naipes de juego para las cortes italianas. Echar las cartas para leer el destino no se documenta hasta finales del siglo XVIII."}
+];
+
+const MITO=[
+{y:"c. 1440",k:"dato",t:"Naipes de triunfos en el norte de Italia",d:"En las cortes de Milán, Ferrara o Florencia se añaden a la baraja de cuatro palos unas cartas alegóricas, los triunfos, para un juego de bazas."},
+{y:"c. 1450",k:"dato",t:"Las cartas Visconti-Sforza",d:"Barajas pintadas a mano para los duques de Milán, atribuidas en parte a Bonifacio Bembo. Son las más antiguas que se conservan en buena medida."},
+{y:"1534",k:"dato",t:"Rabelais y el tarau",d:"En Gargantúa, entre los juegos del gigante, aparece el tarau: el tarot ya es un pasatiempo conocido en Francia."},
+{y:"s. XVII–XVIII",k:"dato",t:"Se fija el modelo de Marsella",d:"Jean Noblet (París, c. 1650), Jean Dodal (Lyon, 1701) y Nicolas Conver (Marsella, 1760) graban en madera la iconografía que hoy llamamos Tarot de Marsella."},
+{y:"1781",k:"mito",t:"Court de Gébelin: el Libro de Thot",d:"En Le Monde primitif afirma que el tarot es un libro sagrado egipcio salvado de la destrucción. No hay ninguna prueba, pero el mito funda el tarot esotérico."},
+{y:"década de 1780",k:"sis",t:"Etteilla y la cartomancia",d:"Jean-Baptiste Alliette, Etteilla, publica métodos para echar las cartas y diseña una baraja adivinatoria: nace la lectura profesional del tarot."},
+{y:"1855",k:"sis",t:"Éliphas Lévi: la Cábala",d:"Asocia los 22 arcanos con las 22 letras del alfabeto hebreo. Es un sistema simbólico fecundo, pero no un origen histórico; cada escuela posterior asigna las letras de otro modo."},
+{y:"1889",k:"mito",t:"Papus: el tarot de los bohemios",d:"Populariza la idea de que los gitanos trajeron el tarot desde Egipto. Los naipes ya circulaban por Europa antes de la llegada de los gitanos."},
+{y:"1909",k:"sis",t:"Waite y Pamela Colman Smith",d:"Publican una baraja ilustrada en todas sus cartas, acompañada de un libro de significados. En el siglo XX se mencionan también los cátaros como posibles creadores, sin ningún documento que lo respalde."},
+{y:"1930",k:"dato",t:"El Marsella de Paul Marteau",d:"La casa Grimaud edita un Marsella con paleta reducida que se convierte en el estándar del siglo XX. Es la baraja que usaron Jung y Nichols."},
+{y:"1933 · 1950",k:"sis",t:"Jung y los arquetipos",d:"Jung ve en los arcanos imágenes arquetípicas de transformación y, en 1950, propone estudiarlos junto a la astrología y el I Ching como métodos intuitivos."},
+{y:"1966",k:"hip",t:"Los Triunfos de Petrarca",d:"Gertrude Moakley propone que los arcanos derivan de los desfiles alegóricos inspirados en I Trionfi de Petrarca. Es una hipótesis plausible y coherente con su origen cortesano."},
+{y:"1980",k:"sis",t:"Sallie Nichols, Jung y el Tarot",d:"Lee los 22 triunfos como un viaje de individuación mediante la amplificación junguiana. Su propia historia del tarot, como advierte Mary Greer, es en gran parte inexacta."},
+{y:"1997 · 2004",k:"sis",t:"Jodorowsky y Camoin",d:"Restauran un Marsella con once colores y publican La vía del Tarot: el tarot como lenguaje visual y herramienta de autoconocimiento, no de adivinación."},
+{y:"2011 · 2017",k:"mito",t:"Houdouin: la geometría sagrada",d:"Sostiene que todo el Marsella deriva del Cubo de Metatrón y de una transmisión iniciática desde la Antigüedad. Su trabajo con barajas históricas es valioso; sus tesis de origen no tienen respaldo documental."},
+{y:"2026",k:"sis",t:"Esta web",d:"Una inteligencia artificial ayuda a escribir sobre el tarot: otra capa de proyección. Por eso la declaramos, y por eso te pedimos que mires las cartas con tus propios ojos."}
+];
+
+const COLORES=[
+{n:"Negro",h:"#141210",p:"El origen, lo latente, el humus donde todo germina.",m:"El vacío que asusta, lo que se oculta."},
+{n:"Blanco",h:"#f3eee1",p:"La luz completa, la pureza, lo realizado.",m:"La frialdad, la distancia, lo inerte."},
+{n:"Violeta",h:"#6d4f80",p:"La sabiduría, lo impersonal, el yo que se disuelve.",m:"El sacrificio, la renuncia, el duelo."},
+{n:"Azul claro",h:"#93b9d8",p:"La apertura a lo alto, la receptividad espiritual.",m:"La idealización, la pasividad."},
+{n:"Azul oscuro",h:"#2f4b8c",p:"La receptividad a lo profundo, la paciencia.",m:"La dureza, el dominio sin alma."},
+{n:"Amarillo claro",h:"#efd65c",p:"La claridad, la inteligencia que actúa.",m:"La sequedad, el intelecto sin emoción."},
+{n:"Amarillo oscuro",h:"#bd8a2b",p:"La consciencia madura, la intuición que recibe.",m:"La obsesión, la confusión."},
+{n:"Carne",h:"#e7b595",p:"Lo humano, el cuerpo vivo, el placer de estar aquí.",m:"El apego a lo material, el rechazo del cuerpo."},
+{n:"Rojo",h:"#c8432a",p:"La acción, la vitalidad, el deseo.",m:"La violencia, la impulsividad."},
+{n:"Verde claro",h:"#9cbf6a",p:"El crecimiento, la naturaleza que nace.",m:"La inmadurez, la dispersión."},
+{n:"Verde oscuro",h:"#3f6b3a",p:"El arraigo, la fuerza vegetal que persiste.",m:"La absorción, el estancamiento."}
+];
+
+/* ===================================================================== */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const REDUCED=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CALIBRAR=/[?&]calibrar/.test(location.search);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+function rint(n){try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n}catch(e){return Math.floor(Math.random()*n)}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function fnv(str){let h=0x811c9dc5;for(const ch of str){h^=ch.codePointAt(0);h=Math.imul(h,0x01000193)>>>0}return h>>>0}
+function seedOf(text){return fnv(text.trim().toLowerCase().normalize("NFC"))}
+const fmt=n=>n.toLocaleString("es-ES");
+const label=n=>(ROMAN[n]?ROMAN[n]+" · ":"")+ARC[n].es;
+function grado(n){return(n===0||n===21)?null:((n-1)%10)+1}
+function duoOf(n){if(n>=1&&n<=10)return n+10;if(n>=11&&n<=20)return n-10;return null}
+function parejaOf(n){for(const[a,b]of PAREJAS){if(a===n)return b;if(b===n)return a}return null}
+function parejaTxt(a,b){return PAREJA_TXT[Math.min(a,b)+"-"+Math.max(a,b)]||""}
+
+/* ---------- muestreo de constelaciones ---------- */
+const PTS=[];
+function sampleGlyph(text,N){
+  const S=200,c=document.createElement("canvas");c.width=c.height=S;const g=c.getContext("2d");
+  let fs=160;g.font=fs+"px Fell";while(g.measureText(text).width>S*.9&&fs>30){fs-=6;g.font=fs+"px Fell"}
+  g.fillStyle="#fff";g.textAlign="center";g.textBaseline="middle";g.fillText(text,S/2,S/2+fs*.06);
+  const d=g.getImageData(0,0,S,S).data;
+  const grab=step=>{const p=[];for(let y=0;y<S;y+=step)for(let x=0;x<S;x+=step)if(d[(y*S+x)*4+3]>140)p.push([(x-S/2)/(S/2),(y-S/2)/(S/2)]);return p};
+  let p=grab(3);if(p.length<N)p=grab(2);
+  if(p.length){let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(const[x,y]of p){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y)}const cx=(x0+x1)/2,cy=(y0+y1)/2,k=.9/Math.max(x1-x0,y1-y0,.5)*1.7;p=p.map(([x,y])=>[(x-cx)*Math.min(k,1.25),(y-cy)*Math.min(k,1.25)])}
+  return shuffle(p).slice(0,N);
+}
+function spiral(N){const p=[];for(let i=0;i<N;i++){const a=i*.42,r=.06+.86*Math.sqrt(i/N);p.push([Math.cos(a)*r*.9,Math.sin(a)*r])}return p}
+function buildPoints(){const N=matchMedia("(max-width:700px)").matches?46:72;for(let n=0;n<22;n++)PTS[n]=n===0?spiral(N):sampleGlyph(ROMAN[n],N)}
+
+/* ---------- cartas ---------- */
+function artSVG(n){
+  const pts=PTS[n]||[];let dots="";
+  let s=fnv("arc"+n);const rnd=()=>{s=Math.imul(s^(s>>>15),2246822519)>>>0;s=Math.imul(s^(s>>>13),3266489917)>>>0;return((s^(s>>>16))>>>0)/4294967296};
+  for(let i=0;i<70;i++)dots+=`<circle cx="${(rnd()*100).toFixed(1)}" cy="${(rnd()*170).toFixed(1)}" r="${(.25+rnd()*.5).toFixed(2)}" fill="#2a241c" opacity="${(.2+rnd()*.4).toFixed(2)}"/>`;
+  for(const[x,y]of pts)dots+=`<circle cx="${(50+x*36).toFixed(1)}" cy="${(85+y*36).toFixed(1)}" r="1.15" fill="#b8391f"/>`;
+  return `<svg viewBox="0 0 100 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="100" height="170" fill="#efe4c9"/><rect width="100" height="170" fill="url(#hatch)"/><circle cx="50" cy="85" r="44" fill="url(#glow)"/><circle cx="50" cy="85" r="44" fill="none" stroke="#2a241c" stroke-opacity=".25" stroke-width=".3"/><circle cx="50" cy="85" r="46.5" fill="none" stroke="#2a241c" stroke-opacity=".18" stroke-width=".2" stroke-dasharray="1 1.6"/>${dots}</svg>`;
+}
+ARC.forEach(a=>{a.img="img/"+String(a.n).padStart(2,"0")});
+function cardHTML(n,cls=""){
+  const a=ARC[n],big=/\blg\b/.test(cls);
+  const art=a.img?`<img src="${a.img}${big?"":"-384"}.webp" alt="${esc(a.es)}: estampa generada con IA bajo dirección artística humana, en estilo de grabado inspirado en Doré" ${big?"":'loading="lazy"'} decoding="async" width="${big?768:384}" height="${big?1536:768}">`:artSVG(n);
+  return `<div class="card ${cls}" data-n="${n}"><div class="art">${art}</div><div class="band top">${ROMAN[n]||"&nbsp;"}</div><div class="band bot">${esc(a.hist)||"&nbsp;"}</div></div>`;
+}
+
+/* =====================================================================
+   LA NUBE
+   ===================================================================== */
+const Nube=(()=>{
+  const cv=$("#nubeCanvas"),g=cv.getContext("2d");
+  let W=0,H=0,DPR=1,S=1,run=false,last=performance.now(),T=0;
+  const lens={x:0,y:0,tx:0,ty:0,r:120,user:false,lastMove:0,down:null};
+  let cons=[],dust=[],sec=[],hover=null,focus=null,focusUntil=0;
+  let rotY=.4,tilt=-.32,px=0,py=0;
+  const found=new Set(store.get("speculum-secretos",[]));
+  let CX=0,CY=0,SX=1;
+  function resize(){const r=cv.getBoundingClientRect();DPR=Math.min(devicePixelRatio||1,2);W=cv.width=Math.round(r.width*DPR);H=cv.height=Math.round(r.height*DPR);S=Math.min(W,H)*.40;const wide=W>H*1.2;CX=wide?W*.6:W/2;CY=wide?H*.5:H*.56;SX=wide?Math.min(W*.36,S*1.9)/S:1.15;lens.r=Math.max(70*DPR,Math.min(W,H)*.13)}
+  function init(){
+    resize();
+    cons=ARC.map((a,i)=>{const k=i,ang=k*2.39996+.6,rad=k===0?0:.22+.82*Math.sqrt(k/21);
+      return{n:i,x:Math.cos(ang)*rad,y:(Math.sin(k*1.7)*.16)+(k===0?0:Math.sin(ang)*rad*.18),z:Math.sin(ang)*rad,t:0,
+        pts:PTS[i].map(([u,v])=>({u,v,ox:(Math.random()-.5)*2,oy:(Math.random()-.5)*2,ph:Math.random()*6.28,w:.4+Math.random()*.8}))}});
+    dust=Array.from({length:matchMedia("(max-width:700px)").matches?700:1400},()=>{const a=Math.random()*6.28,b=Math.acos(2*Math.random()-1),r=.3+Math.pow(Math.random(),.6)*1.5;return{x:r*Math.sin(b)*Math.cos(a),y:r*Math.cos(b)*.6,z:r*Math.sin(b)*Math.sin(a),s:Math.random()}});
+    sec=SECRETOS.map((s,i)=>{const a=i/SECRETOS.length*6.28+.35,r=1.12+(i%3)*.1;return{i,x:Math.cos(a)*r,y:((i%2)?-.38:.34)+Math.sin(i*2.3)*.12,z:Math.sin(a)*r,dwell:0}});
+    lens.x=lens.tx=W*.62;lens.y=lens.ty=H*.52;
+    updateCount();
+    cv.addEventListener("pointermove",e=>{const r=cv.getBoundingClientRect();lens.tx=(e.clientX-r.left)*DPR;lens.ty=(e.clientY-r.top)*DPR;lens.user=true;lens.lastMove=performance.now();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5;if(lens.down&&Math.hypot(e.clientX-lens.down[0],e.clientY-lens.down[1])>10)lens.down=null});
+    cv.addEventListener("pointerdown",e=>{const r=cv.getBoundingClientRect();lens.tx=lens.x=(e.clientX-r.left)*DPR;lens.ty=lens.y=(e.clientY-r.top)*DPR;lens.user=true;lens.lastMove=performance.now();lens.down=[e.clientX,e.clientY]});
+    cv.addEventListener("pointerup",()=>{if(lens.down&&hover!=null&&cons[hover].t>.5)Camara.open(hover);lens.down=null});
+    cv.addEventListener("pointerleave",()=>{lens.user=false});
+    addEventListener("resize",resize);
+    new IntersectionObserver(es=>{const v=es[0].isIntersecting;if(v&&!run){run=true;last=performance.now();requestAnimationFrame(frame)}else if(!v)run=false},{threshold:.05}).observe(cv);
+  }
+  function proj(x,y,z){const cy=Math.cos(rotY),sy=Math.sin(rotY);let X=x*cy-z*sy,Z=x*sy+z*cy;const ct=Math.cos(tilt),st=Math.sin(tilt);const Y=y*ct-Z*st;Z=y*st+Z*ct;const f=2.8/(2.8+Z);return[CX+X*S*SX*f,CY+Y*S*f,f,Z]}
+  function updateCount(){$("#secretosCount").innerHTML=`Secretos <b>${found.size}</b> / ${SECRETOS.length}`}
+  function frame(now){
+    if(!run)return;const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;
+    rotY+=dt*(REDUCED?.006:.028);tilt+=((-.32+py*.25)-tilt)*.03;
+    if(focus!=null&&now<focusUntil){const c=cons[focus],p=proj(c.x,c.y,c.z);lens.tx=p[0];lens.ty=p[1]}
+    else{if(focus!=null)focus=null;if(!lens.user&&now-lens.lastMove>2500){lens.tx=W*(.5+.3*Math.sin(T*.13))+W*.05*Math.sin(T*.41);lens.ty=H*(.52+.22*Math.sin(T*.19+1))}}
+    lens.x+=(lens.tx-lens.x)*.16;lens.y+=(lens.ty-lens.y)*.16;
+    g.clearRect(0,0,W,H);
+    const R=lens.r;
+    // polvo
+    for(const d of dust){const p=proj(d.x,d.y,d.z);if(p[3]<-2.5)continue;const dl=Math.hypot(p[0]-lens.x,p[1]-lens.y);const inL=dl<R;const a=(inL?.55:.16)*p[2]*(.4+d.s*.6);g.fillStyle=inL?`rgba(240,214,170,${a})`:`rgba(232,220,192,${a})`;const s=(inL?1.4:1)*DPR*p[2];g.fillRect(p[0],p[1],s,s)}
+    // constelaciones
+    const order=cons.map(c=>{const p=proj(c.x,c.y,c.z);return{c,p}}).sort((a,b)=>b.p[3]-a.p[3]);
+    let best=null,bd=1e9;
+    for(const{c,p}of order){
+      const dl=Math.hypot(p[0]-lens.x,p[1]-lens.y);
+      const target=dl<R*1.05?Math.min(1,(R*1.15-dl)/(R*.55)):0;
+      c.t+=(Math.max(0,target)-c.t)*.07;
+      if(dl<R*.9&&dl<bd){bd=dl;best=c.n}
+      const sc=S*.13*p[2],ch=S*.11*p[2],t=c.t,wob=REDUCED?0:1;
+      const r=Math.round(222+(236-222)*t),gg=Math.round(214+(140-214)*t),b=Math.round(190+(96-190)*t);
+      const alpha=(.34+.6*t)*Math.min(1,.5+p[2]*.6);
+      g.fillStyle=`rgba(${r},${gg},${b},${alpha})`;
+      const sz=(1.3+1.3*t)*DPR*p[2];
+      for(const q of c.pts){const k=1-t;const x=p[0]+q.u*sc+(q.ox*ch+Math.sin(T*q.w+q.ph)*ch*.25*wob)*k;const y=p[1]+q.v*sc+(q.oy*ch+Math.cos(T*q.w*.8+q.ph)*ch*.25*wob)*k;g.fillRect(x-sz/2,y-sz/2,sz,sz)}
+      if(t>.3){g.globalAlpha=Math.min(1,(t-.3)*1.6);g.textAlign="center";g.fillStyle="#efe4c9";g.font=`${Math.round(17*DPR*p[2])}px Fell`;g.fillText(ARC[c.n].es,p[0],p[1]+sc+26*DPR*p[2]);g.fillStyle="rgba(214,200,168,.85)";g.font=`italic ${Math.round(13*DPR*p[2])}px Garamond`;g.fillText(ARC[c.n].kw,p[0],p[1]+sc+44*DPR*p[2]);g.globalAlpha=1}
+    }
+    hover=best;
+    // secretos
+    for(const s of sec){
+      const p=proj(s.x,s.y,s.z),dl=Math.hypot(p[0]-lens.x,p[1]-lens.y),isF=found.has(s.i);
+      const vis=dl<R?1-dl/R:0;
+      if(isF){star(p[0],p[1],5*DPR*p[2],`rgba(210,157,54,${.35+vis*.6})`)}
+      else if(vis>0){star(p[0],p[1],(4+vis*4)*DPR*p[2],`rgba(208,73,46,${vis})`);
+        if(dl<R*.45&&lens.user){s.dwell+=dt;g.strokeStyle="rgba(210,157,54,.9)";g.lineWidth=1.5*DPR;g.beginPath();g.arc(p[0],p[1],14*DPR,-Math.PI/2,-Math.PI/2+Math.min(1,s.dwell/.9)*6.283);g.stroke();if(s.dwell>.9)reveal(s.i)}else s.dwell=Math.max(0,s.dwell-dt)}
+      else{s.dwell=0;if(!REDUCED&&Math.sin(T*1.3+s.i*2.1)>.985)star(p[0],p[1],2*DPR,"rgba(232,220,192,.5)")}
+    }
+    drawLens(R);
+    cv.style.cursor=(hover!=null&&cons[hover].t>.5)?"pointer":"none";
+    requestAnimationFrame(frame);
+  }
+  function star(x,y,r,col){g.fillStyle=col;g.beginPath();for(let i=0;i<16;i++){const a=i/16*6.283,rr=i%2?r*.38:r;g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}g.closePath();g.fill()}
+  function drawLens(R){
+    const x=lens.x,y=lens.y;
+    const gr=g.createRadialGradient(x,y,R*.2,x,y,R);gr.addColorStop(0,"rgba(240,214,170,.07)");gr.addColorStop(1,"rgba(240,214,170,0)");g.fillStyle=gr;g.beginPath();g.arc(x,y,R,0,6.283);g.fill();
+    g.strokeStyle="rgba(232,220,192,.6)";g.lineWidth=1*DPR;g.beginPath();g.arc(x,y,R,0,6.283);g.stroke();
+    g.strokeStyle="rgba(232,220,192,.22)";g.beginPath();g.arc(x,y,R+7*DPR,0,6.283);g.stroke();
+    const rot=T*.12;g.strokeStyle="rgba(232,220,192,.5)";
+    for(let i=0;i<72;i++){const a=rot+i/72*6.283,l=(i%6===0?9:4)*DPR;g.beginPath();g.moveTo(x+Math.cos(a)*(R+1*DPR),y+Math.sin(a)*(R+1*DPR));g.lineTo(x+Math.cos(a)*(R+1*DPR+l),y+Math.sin(a)*(R+1*DPR+l));g.stroke()}
+    g.strokeStyle="rgba(208,73,46,.8)";g.beginPath();g.moveTo(x-6*DPR,y);g.lineTo(x+6*DPR,y);g.moveTo(x,y-6*DPR);g.lineTo(x,y+6*DPR);g.stroke();
+  }
+  function reveal(i){if(found.has(i))return;found.add(i);store.set("speculum-secretos",[...found]);updateCount();const s=SECRETOS[i];
+    showPanel(`<p class="kicker" style="margin:0 0 6px">Secreto ${found.size} de ${SECRETOS.length}</p><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>${found.size===SECRETOS.length?'<p><i>Has encontrado todos los secretos. La lente ya no tiene nada más que enseñarte: ahora mira tú.</i></p>':""}`,14000)}
+  function summon(n){focus=n;focusUntil=performance.now()+9000;lens.lastMove=performance.now()}
+  return{init,summon,found};
+})();
+
+let panelTimer=null;
+function showPanel(html,ms){const p=$("#panelNube");$("#panelNubeBody").innerHTML=html;p.classList.add("show");clearTimeout(panelTimer);if(ms)panelTimer=setTimeout(()=>p.classList.remove("show"),ms)}
+$$("[data-close]").forEach(b=>b.addEventListener("click",()=>$("#"+b.dataset.close).classList.remove("show")));
+
+$("#proyecta").addEventListener("submit",e=>{e.preventDefault();const v=$("#proyectaIn").value.trim();if(!v)return;const h=seedOf(v),n=h%22,a=ARC[n];Nube.summon(n);
+  showPanel(`<p class="kicker" style="margin:0 0 6px">La nube responde</p><h3>${esc(label(n))}</h3><p><i>${esc(a.q[0])}</i></p><p class="note">Proyectaste «${esc(v)}». Sin oráculo: tu texto se convirtió en un número (${fmt(h)}) y su resto entre 22 es ${n}.</p><p><button class="btn primary" data-open="${n}">Entrar en la carta</button> <a class="btn" href="#laboratorio">Por qué</a></p>`,0)});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b){e.preventDefault();Camara.open(+b.dataset.open)}});
+
+function buildIndice(){const el=$("#indice");el.innerHTML=ARC.map(a=>`<button data-open="${a.n}"><b>${ROMAN[a.n]||"·"}</b>${esc(a.es)}</button>`).join("");$("#indiceBtn").addEventListener("click",()=>{const o=el.classList.toggle("open");$("#indiceBtn").setAttribute("aria-expanded",o)})}
+
+/* =====================================================================
+   CÁMARA
+   ===================================================================== */
+const Camara=(()=>{
+  const dlg=$("#camara");let cur=0,tab="mirar";const seen=new Set();
+  function open(n){cur=n;render();if(!dlg.open)dlg.showModal();$("#camRight").scrollTop=0}
+  function close(){dlg.close()}
+  function go(d){open((cur+d+22)%22)}
+  function render(){
+    const a=ARC[cur],dn=duoOf(cur),pn=parejaOf(cur),sm=21-cur,gr=grado(cur);
+    const cc=$("#camCard");
+    cc.innerHTML=cardHTML(cur,"lg")+`<div class="lens"><div class="mag">${cardHTML(cur,"lg")}</div></div>`+a.hs.map((h,i)=>`<button class="hs ${seen.has(cur+"-"+i)?"seen":""}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" aria-label="${esc(h.t)}"></button>`).join("");
+    $("#hsNote").innerHTML="Pasa la lente sobre la carta. Los puntos rojos señalan detalles que hablan.";
+    const refl=store.get("speculum-reflejos",{})[cur]||"";
+    const chip=n=>`<button class="chip" data-go="${n}"><b>${ROMAN[n]||"·"}</b>${esc(ARC[n].es)}</button>`;
+    $("#camRight").innerHTML=`
+      <div class="cam-head"><div class="num">${cur===0?"SIN NÚMERO":"ARCANO "+ROMAN[cur]}${gr?" · GRADO "+gr+" DE LA "+(cur<=10?"PRIMERA":"SEGUNDA")+" SERIE":""}</div>
+      <h2>${esc(a.es)}</h2><div class="hist">${a.hist?esc(a.hist):"(sin nombre)"}</div>
+      <p class="kw">${esc(a.kw)}</p><p class="sombra">Sombra: ${esc(a.sombra)}</p></div>
+      <div class="tabs" role="tablist">
+        ${[["mirar","Mirar"],["amp","Amplificar"],["dialogar","Dialogar"],["rel","Relaciones"],["reflejo","Tu reflejo"]].map(([k,l])=>`<button role="tab" data-tab="${k}" class="${tab===k?"on":""}">${l}</button>`).join("")}
+      </div>
+      <div class="tabpane ${tab==="mirar"?"on":""}" data-pane="mirar"><p>${esc(a.mirar)}</p><p class="note">Gramática visual en la línea de Jodorowsky y Costa: mirar antes de interpretar. El texto describe la iconografía tradicional de Marsella; la estampa la reinterpreta en grabado. Compara ambas con la lente.</p></div>
+      <div class="tabpane ${tab==="amp"?"on":""}" data-pane="amp"><p>${esc(a.amp)}</p><p class="note">Amplificación junguiana en la línea de Sallie Nichols: rodear la imagen de mitos, arte e historia hasta que muestre su fuerza.</p></div>
+      <div class="tabpane ${tab==="dialogar"?"on":""}" data-pane="dialogar"><ul class="preguntas">${a.q.map(q=>`<li>${esc(q)}</li>`).join("")}</ul>
+        <p class="note"><b>Imaginación activa.</b> Mira la carta un minuto sin pensar. Después, pregúntale a la figura qué quiere de ti y escribe la respuesta sin corregirla. No interpretes todavía: deja que hable.</p></div>
+      <div class="tabpane ${tab==="rel"?"on":""}" data-pane="rel">
+        ${gr?`<div class="rel-row"><span class="t">Grado ${gr}</span>${esc(GRADO_TXT[gr])}.</div>`:`<div class="rel-row"><span class="t">Fuera de los grados</span>${cur===0?"El Loco es energía pura, anterior a toda serie.":"El Mundo es la realización: cierra las dos series."}</div>`}
+        ${dn!=null?`<div class="rel-row"><span class="t">Dúo</span>${chip(dn)} ${esc(DUO_TXT[gr])}.</div>`:""}
+        ${pn!=null?`<div class="rel-row"><span class="t">Pareja</span>${chip(pn)} ${esc(parejaTxt(cur,pn))}.</div>`:""}
+        <div class="rel-row"><span class="t">Suman XXI</span>${chip(sm)} ${cur}${" + "}${sm} = 21: se reflejan como en un espejo.</div>
+        <div class="rel-row"><span class="t">Sucesión</span>${cur>0?chip(cur-1):""} ${cur<21?chip(cur+1):""}</div>
+        <p class="note" style="margin-top:14px">Estructura de Jodorowsky y Costa. Míralo completo en <a href="#grafo" data-closecam>el grafo</a>.</p>
+      </div>
+      <div class="tabpane ${tab==="reflejo"?"on":""}" data-pane="reflejo">
+        <p>¿Qué ves tú en esta carta? ¿A quién te recuerda? ¿Qué escena de tu vida se parece a ella?</p>
+        <textarea id="reflejoTxt" placeholder="Escribe sin censura. Esto no lo lee nadie más: se guarda solo en tu navegador.">${esc(refl)}</textarea>
+        <p><button class="btn" id="reflejoGuardar">Guardar en mi diario</button><span class="saved" id="reflejoOk">Guardado</span></p>
+      </div>`;
+  }
+  dlg.addEventListener("click",e=>{
+    const t=e.target.closest("[data-tab]");if(t){tab=t.dataset.tab;$$("#camRight [data-tab]").forEach(b=>b.classList.toggle("on",b===t));$$("#camRight [data-pane]").forEach(p=>p.classList.toggle("on",p.dataset.pane===tab));return}
+    const gch=e.target.closest("[data-go]");if(gch){open(+gch.dataset.go);return}
+    const h=e.target.closest("[data-hs]");if(h){const i=+h.dataset.hs,hs=ARC[cur].hs[i];seen.add(cur+"-"+i);h.classList.add("seen");$("#hsNote").innerHTML=`<b>${esc(hs.t)}</b>${esc(hs.d)}`;return}
+    if(e.target.closest("[data-closecam]")){close();return}
+    if(e.target.id==="reflejoGuardar"){const v=$("#reflejoTxt").value.trim();const r=store.get("speculum-reflejos",{});r[cur]=v;store.set("speculum-reflejos",r);if(v)Diario.add({tipo:"Reflejo",titulo:label(cur),texto:v});const ok=$("#reflejoOk");ok.classList.add("on");setTimeout(()=>ok.classList.remove("on"),1800);return}
+    if(e.target===dlg)close();
+  });
+  const cc=$("#camCard");
+  function lensAt(cx,cy){const r=cc.getBoundingClientRect();const x=cx-r.left,y=cy-r.top;const L=$(".lens",cc);if(!L)return;const lr=Math.max(90,r.width*.42),Z=1.9;cc.style.setProperty("--lr",lr+"px");L.style.left=x+"px";L.style.top=y+"px";const M=L.firstElementChild;M.style.width=r.width+"px";M.style.height=r.height+"px";M.style.transform=`translate(${lr/2-x*Z}px,${lr/2-y*Z}px) scale(${Z})`;cc.classList.add("lensing");
+    $$(".hs",cc).forEach(b=>{const bx=parseFloat(b.style.left)/100*r.width,by=parseFloat(b.style.top)/100*r.height;b.classList.toggle("vis",Math.hypot(bx-x,by-y)<lr*.5)});
+    if(CALIBRAR){const box=$("#calBox");box.style.display="block";box.textContent=`n=${cur}  x:${(x/r.width*100).toFixed(1)}  y:${(y/r.height*100).toFixed(1)}  (clic para fijar)`}}
+  cc.addEventListener("pointermove",e=>lensAt(e.clientX,e.clientY));
+  cc.addEventListener("pointerdown",e=>lensAt(e.clientX,e.clientY));
+  cc.addEventListener("pointerleave",()=>{cc.classList.remove("lensing");$$(".hs",cc).forEach(b=>b.classList.remove("vis"))});
+  if(CALIBRAR)cc.addEventListener("click",e=>{const r=cc.getBoundingClientRect();const s=`{x:${((e.clientX-r.left)/r.width*100).toFixed(0)},y:${((e.clientY-r.top)/r.height*100).toFixed(0)}}`;console.log("arcano",cur,s);navigator.clipboard&&navigator.clipboard.writeText(s).catch(()=>{})});
+  $("#camPrev").addEventListener("click",()=>go(-1));$("#camNext").addEventListener("click",()=>go(1));$("#camClose").addEventListener("click",close);
+  dlg.addEventListener("keydown",e=>{if(e.target.tagName==="TEXTAREA")return;if(e.key==="ArrowRight")go(1);if(e.key==="ArrowLeft")go(-1)});
+  return{open,close};
+})();
+
+/* =====================================================================
+   VIAJE
+   ===================================================================== */
+function buildViaje(){
+  $("#locoSolo").innerHTML=`<button class="card-btn" data-open="0">${cardHTML(0)}<div class="cap"><b>El Loco</b>${esc(ARC[0].kw)}</div></button><p class="note">Fuera de la serie: el viajero que atraviesa las tres filas.</p>`;
+  const filas=[[1,7,"El reino de los dioses","Las grandes figuras parentales y espirituales: arquetipos que nos preceden y nos forman, todavía lejos del yo."],
+    [8,14,"El reino del yo en el mundo","La consciencia se pone a prueba en la realidad terrenal: equilibrio, crisis, ciclos, sacrificio y transformación."],
+    [15,21,"El reino de la iluminación","La sombra, la irrupción y los astros: el camino hacia la realización del sí-mismo."]];
+  $("#filas").innerHTML=filas.map(([a,b,t,d])=>`<div class="fila"><h3>${t}</h3><p class="note">${d}</p><div class="fila-cards">${Array.from({length:b-a+1},(_,i)=>a+i).map(n=>`<button class="card-btn" data-open="${n}">${cardHTML(n)}<div class="cap"><b>${esc(ARC[n].es)}</b>${esc(ARC[n].kw.split(",")[0])}</div></button>`).join("")}</div></div>`).join("")+`<p class="note">Disposición en tres filas de siete según la estructura propuesta por Sallie Nichols en <i>Jung y el Tarot</i>. Los títulos de las filas son una paráfrasis.</p>`;
+}
+
+/* =====================================================================
+   MESA
+   ===================================================================== */
+const ESTR={
+  pma:{d:"Tres cartas en línea. La del centro es la protagonista: tú o la situación. A su izquierda, quien media o ayuda; a su derecha, lo que se opone o resiste. Estrategia descrita por Jodorowsky y Costa.",roles:["Mediador","Protagonista","Antagonista"]},
+  pregunta:{d:"Sin pregunta previa: las cartas la formulan. Cada una te devuelve una pregunta. Quédate con la que más te incomode.",roles:["Lo que te interpela","Lo que está en juego","Hacia dónde se abre"]},
+  viva:{d:"Tres cartas, y después las miradas mandan: si la carta de un extremo mira hacia fuera, pide otra carta en esa dirección. La tirada crece hasta cerrarse sobre sí misma. Inspirada en la tirada viva de Houdouin y en la lectura de miradas de Jodorowsky.",roles:["","",""]},
+  cruz:{d:"Cuatro cartas en cruz y un centro que no se elige: se calcula sumando las cuatro y reduciendo la suma (si pasa de 22, se suman sus cifras). Tirada en cruz según Houdouin. El laboratorio muestra por qué el centro no es azaroso.",roles:["Lo que vives","Lo que afrontas","Lo que se pide de ti","Lo que aspiras","Clave"]}
+};
+const Mesa=(()=>{
+  let draw=null;
+  function desc(){const v=$("#estrategia").value;$("#estrDesc").textContent=ESTR[v].d}
+  function reduceA(s){while(s>22)s=String(s).split("").reduce((a,b)=>a+(+b),0);return s}
+  function deal(){
+    const mode=$("#estrategia").value,deck=shuffle(Array.from({length:22},(_,i)=>i));
+    let slots=[];
+    if(mode==="pma"||mode==="pregunta"){slots=deck.slice(0,3).map((n,i)=>({n,role:ESTR[mode].roles[i]}))}
+    else if(mode==="viva"){
+      const line=deck.slice(0,3);let k=3;
+      for(let it=0;it<2;it++){const L=line[0];if(ARC[L].gaze==="L"&&k<deck.length)line.unshift(deck[k++])}
+      for(let it=0;it<2;it++){const Rn=line[line.length-1];if(ARC[Rn].gaze==="R"&&k<deck.length)line.push(deck[k++])}
+      slots=line.map(n=>({n,role:""}));
+    }else{
+      const four=deck.slice(0,4);const sum=four.reduce((a,b)=>a+(b===0?22:b),0);let c=reduceA(sum);const cn=c===22?0:c;
+      slots=four.map((n,i)=>({n,role:ESTR.cruz.roles[i],area:["l","r","a","b"][i]}));slots.push({n:cn,role:"Clave",area:"c",calc:true,sum,c});
+    }
+    draw={mode,slots,shown:new Set()};render();
+  }
+  function render(){
+    const {mode,slots}=draw;const tp=$("#tapete");
+    const slotHTML=(s,i)=>`<div class="slot" ${s.area?`style="grid-area:${s.area}"`:""}><div class="role ${s.calc?"calc":""}">${esc(s.role||"")}</div><button class="flip" data-i="${i}" aria-label="Revelar carta"><div class="inner"><div class="card back"></div>${cardHTML(s.n,"front")}</div></button><div class="nm" data-nm="${i}"></div></div>`;
+    if(mode==="cruz"){tp.innerHTML=`<div><div class="cruz">${slots.map(slotHTML).join("")}</div><div class="calc-line" id="calcLine"></div></div>`}
+    else tp.innerHTML=`<div class="linea">${slots.map(slotHTML).join("")}</div>`;
+    $("#revelar").disabled=false;$("#sintesis").classList.remove("on");$("#lecturaNota").value="";
+  }
+  function flip(i){if(!draw||draw.shown.has(i))return;const s=draw.slots[i];if(s.calc&&draw.shown.size<4)return;draw.shown.add(i);const b=$(`.flip[data-i="${i}"]`);b.classList.add("on");b.setAttribute("aria-label",label(s.n));$(`[data-nm="${i}"]`).textContent=ARC[s.n].es;
+    if(draw.mode==="cruz"&&draw.shown.size===4&&!draw.shown.has(4)){setTimeout(()=>{const c=draw.slots[4];$("#calcLine").innerHTML=`${draw.slots.slice(0,4).map(s=>s.n===0?"Le Mat (22)":ROMAN[s.n]).join(" + ")} = ${c.sum}${c.sum>22?` → ${String(c.sum).split("").join(" + ")} = ${c.c}`:""}${c.c===22?" → Le Mat":""}`;flip(4)},500)}
+    if(draw.shown.size===draw.slots.length)synth()}
+  function synth(){
+    const {mode,slots}=draw;
+    const rows=slots.map((s,i)=>{const a=ARC[s.n];let extra="";
+      if(mode==="pregunta")extra=`<p><i>${esc(a.q[0])}</i></p>`;
+      else extra=`<p>${esc(a.kw)}. <span class="note">Sombra: ${esc(a.sombra)}.</span></p><p><i>${esc(a.q[(i+1)%3])}</i></p>`;
+      return `<div class="sint-row"><div class="r">${esc(s.role||"Carta "+(i+1))}</div><div><h4><button class="chip" data-open="${s.n}" style="font-size:1rem"><b>${ROMAN[s.n]||"·"}</b>${esc(a.es)}</button></h4>${extra}</div></div>`}).join("");
+    $("#sintRows").innerHTML=rows;
+    // miradas y relaciones
+    const notes=[];const line=mode==="cruz"?slots.slice(0,4):slots;
+    if(mode!=="cruz")for(let i=0;i<line.length-1;i++){const A=ARC[line[i].n],B=ARC[line[i+1].n];if(A.gaze==="R"&&B.gaze==="L")notes.push(`${A.es} y ${B.es} se miran: hay diálogo entre ellos.`);else if(A.gaze==="L"&&B.gaze==="R")notes.push(`${A.es} y ${B.es} se dan la espalda: dos fuerzas que no se encuentran.`)}
+    const ns=slots.map(s=>s.n);const uniq=[...new Set(ns)];
+    for(let i=0;i<uniq.length;i++)for(let j=i+1;j<uniq.length;j++){const a=uniq[i],b=uniq[j];
+      if(duoOf(a)===b)notes.push(`${ARC[a].es} y ${ARC[b].es} forman un dúo (grado ${grado(a)}): ${DUO_TXT[grado(a)]}.`);
+      if(parejaOf(a)===b)notes.push(`${ARC[a].es} y ${ARC[b].es} son pareja: ${parejaTxt(a,b)}.`);
+      if(a+b===21)notes.push(`${ARC[a].es} y ${ARC[b].es} suman XXI: se reflejan como en un espejo.`)}
+    if(mode==="viva")notes.unshift(`La tirada creció hasta ${slots.length} cartas siguiendo las miradas de los extremos.`);
+    if(mode==="cruz"){const c=slots[4];if(slots.slice(0,4).some(s=>s.n===c.n))notes.push(`La clave repite una carta de la cruz: según Houdouin, eso confirma su importancia.`);notes.push(`Probabilidad de que la clave sea ${ARC[c.n].es}: ${(Lab.cruzDist("A")[c.n]*100).toFixed(2)} %. <a href="#laboratorio">Ver por qué</a>.`)}
+    $("#miradas").innerHTML=notes.length?notes.map(n=>`<p style="margin:0 0 8px">${n}</p>`).join(""):`<p style="margin:0">Ninguna relación estructural entre estas cartas: cada una habla por sí misma. Busca tú los puentes.</p>`;
+    $("#sintesis").classList.add("on");
+  }
+  function init(){desc();$("#estrategia").addEventListener("change",desc);$("#barajar").addEventListener("click",deal);
+    $("#revelar").addEventListener("click",()=>{if(!draw)return;draw.slots.forEach((s,i)=>{if(!s.calc)setTimeout(()=>flip(i),i*180)})});
+    $("#tapete").addEventListener("click",e=>{const b=e.target.closest(".flip");if(!b)return;const i=+b.dataset.i;if(draw.shown.has(i))Camara.open(draw.slots[i].n);else flip(i)});
+    $("#guardarLectura").addEventListener("click",()=>{if(!draw)return;const est=$("#estrategia").selectedOptions[0].textContent;const cartas=draw.slots.map(s=>(s.role?s.role+": ":"")+label(s.n)).join("\n");Diario.add({tipo:"Lectura",titulo:est,texto:cartas+($("#lecturaNota").value.trim()?"\n\n"+$("#lecturaNota").value.trim():"")});const ok=$("#savedLectura");ok.classList.add("on");setTimeout(()=>ok.classList.remove("on"),1800)});
+  }
+  return{init};
+})();
+
+/* =====================================================================
+   DIARIO
+   ===================================================================== */
+const Diario=(()=>{
+  const K="speculum-diario";
+  function all(){return store.get(K,[])}
+  function add(e){const a=all();a.unshift({...e,fecha:new Date().toISOString()});store.set(K,a.slice(0,300))}
+  function render(){const a=all();$("#diarioList").innerHTML=a.length?a.map(e=>`<div class="diario-entry"><div class="d">${new Date(e.fecha).toLocaleString("es-ES")} · ${esc(e.tipo)}</div><h4>${esc(e.titulo)}</h4><p>${esc(e.texto)}</p></div>`).join(""):`<p class="note">Todavía no hay entradas. Guarda un reflejo desde una carta o una lectura desde la mesa.</p>`}
+  function init(){
+    $("#diarioBtn").addEventListener("click",()=>{render();$("#dlgDiario").showModal()});
+    $("#diarioBorrar").addEventListener("click",()=>{if(confirm("¿Borrar todo el diario, los reflejos y los secretos de este navegador?")){try{["speculum-diario","speculum-reflejos","speculum-secretos"].forEach(k=>localStorage.removeItem(k))}catch(e){}render()}});
+    $("#diarioDescargar").addEventListener("click",()=>{const txt=all().map(e=>`${new Date(e.fecha).toLocaleString("es-ES")} · ${e.tipo}\n${e.titulo}\n${e.texto}\n`).join("\n———\n\n")||"Diario vacío";const u=URL.createObjectURL(new Blob(["Speculum Arcanorum · Mi diario\n\n"+txt],{type:"text/plain;charset=utf-8"}));const l=document.createElement("a");l.href=u;l.download="speculum-diario.txt";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)});
+  }
+  return{add,init};
+})();
+
+/* =====================================================================
+   GRAFO
+   ===================================================================== */
+const Grafo=(()=>{
+  const svg=$("#grafoSvg"),NS="http://www.w3.org/2000/svg";let pos={},lay="jodo",sel=null;const edges=[];
+  function layout(k){const P={};
+    if(k==="jodo"){P[0]=[60,280];P[21]=[940,280];for(let i=1;i<=10;i++)P[i]=[150+(i-1)*78,170];for(let i=11;i<=20;i++)P[i]=[150+(i-11)*78,400]}
+    else{P[0]=[500,70];for(let i=1;i<=21;i++){const r=Math.floor((i-1)/7),c=(i-1)%7;P[i]=[200+c*100,190+r*130]}}
+    return P}
+  function build(){
+    for(let i=1;i<=10;i++)edges.push({a:i,b:i+10,k:"duo"});
+    PAREJAS.forEach(([a,b])=>edges.push({a,b,k:"par"}));
+    for(let i=0;i<=10;i++)edges.push({a:i,b:21-i,k:"suma"});
+    for(let i=0;i<21;i++)edges.push({a:i,b:i+1,k:"suc"});
+    const gE=document.createElementNS(NS,"g"),gL=document.createElementNS(NS,"g"),gN=document.createElementNS(NS,"g");svg.append(gL,gE,gN);
+    gL.id="rowlbls";
+    edges.forEach(e=>{e.el=document.createElementNS(NS,"path");e.el.setAttribute("class","e "+e.k);gE.appendChild(e.el)});
+    ARC.forEach(a=>{const g=document.createElementNS(NS,"g");g.setAttribute("class","n");g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-label",label(a.n));
+      g.innerHTML=`<circle r="21"/><text dy="5" font-size="${ROMAN[a.n].length>4?11:14}">${ROMAN[a.n]||"0"}</text><text class="lbl" dy="40" font-size="12">${esc(a.es.replace(/^(El|La) /,""))}</text>`;
+      g.addEventListener("click",()=>select(a.n));g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();select(a.n)}});a.gEl=g;gN.appendChild(g)});
+    pos=layout("jodo");place(pos);labels();
+    $$("[data-lay]").forEach(b=>b.addEventListener("click",()=>{$$("[data-lay]").forEach(x=>x.classList.toggle("on",x===b));to(b.dataset.lay)}));
+    $$("[data-e]").forEach(c=>c.addEventListener("change",()=>svg.classList.toggle("h-"+c.dataset.e,!c.checked)));
+  }
+  function curve(e,P){const[a1,a2]=P[e.a],[b1,b2]=P[e.b];if(e.k==="suc"||e.k==="duo"&&lay==="jodo")return`M${a1},${a2}L${b1},${b2}`;const mx=(a1+b1)/2,my=(a2+b2)/2,dx=b1-a1,dy=b2-a2,L=Math.hypot(dx,dy)||1;const bend=(e.k==="par"?.22:e.k==="suma"?-.28:.18)*L;return`M${a1},${a2}Q${mx-dy/L*bend},${my+dx/L*bend} ${b1},${b2}`}
+  function place(P){edges.forEach(e=>e.el.setAttribute("d",curve(e,P)));ARC.forEach(a=>a.gEl.setAttribute("transform",`translate(${P[a.n][0]},${P[a.n][1]})`))}
+  function labels(){const g=$("#rowlbls");g.innerHTML=lay==="jodo"?`<text class="rowlbl" x="150" y="120">Primera serie · grados 1 a 10</text><text class="rowlbl" x="150" y="470">Segunda serie · grados 1 a 10</text>`:`<text class="rowlbl" x="80" y="195">Dioses</text><text class="rowlbl" x="80" y="325">Yo en el mundo</text><text class="rowlbl" x="80" y="455">Iluminación</text>`}
+  function to(k){if(k===lay)return;const from=pos,target=layout(k);lay=k;labels();const t0=performance.now(),D=REDUCED?1:750;
+    (function step(now){const t=Math.min(1,(now-t0)/D),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;const P={};for(const n in target)P[n]=[from[n][0]+(target[n][0]-from[n][0])*e,from[n][1]+(target[n][1]-from[n][1])*e];place(P);if(t<1)requestAnimationFrame(step);else pos=target})(t0)}
+  function select(n){
+    if(sel===n){sel=null;svg.classList.remove("sel");ARC.forEach(a=>a.gEl.classList.remove("on","me"));edges.forEach(e=>e.el.classList.remove("on"));$("#grafoInfo").innerHTML=`<h3>Elige un arcano</h3><p class="note">Toca de nuevo para soltar.</p>`;return}
+    sel=n;svg.classList.add("sel");const on=new Set([n]);
+    edges.forEach(e=>{const hidden=svg.classList.contains("h-"+e.k);const inc=(e.a===n||e.b===n)&&!hidden;e.el.classList.toggle("on",inc);if(inc){on.add(e.a);on.add(e.b)}});
+    ARC.forEach(a=>{a.gEl.classList.toggle("on",on.has(a.n));a.gEl.classList.toggle("me",a.n===n)});
+    const gr=grado(n),dn=duoOf(n),pn=parejaOf(n),chip=m=>`<button class="chip" data-gsel="${m}"><b>${ROMAN[m]||"·"}</b>${esc(ARC[m].es)}</button>`;
+    $("#grafoInfo").innerHTML=`<p class="kicker" style="margin:0 0 4px">${n===0?"Sin número":"Arcano "+ROMAN[n]}${gr?" · grado "+gr:""}</p><h3>${esc(ARC[n].es)}</h3><p class="note" style="margin:4px 0 14px">${esc(ARC[n].kw)}</p>
+      ${dn!=null?`<div class="rel-row"><span class="t" style="color:var(--ochre)">Dúo</span>${chip(dn)}<br><span class="note">${esc(DUO_TXT[gr])}</span></div>`:""}
+      ${pn!=null?`<div class="rel-row"><span class="t" style="color:var(--verm)">Pareja</span>${chip(pn)}<br><span class="note">${esc(parejaTxt(n,pn))}</span></div>`:""}
+      <div class="rel-row"><span class="t" style="color:var(--sky)">Suma XXI</span>${chip(21-n)}</div>
+      <p style="margin-top:16px"><button class="btn primary" data-open="${n}">Entrar en la carta</button></p>`;
+  }
+  $("#grafoInfo").addEventListener("click",e=>{const b=e.target.closest("[data-gsel]");if(b){sel=null;select(+b.dataset.gsel)}});
+  return{build};
+})();
+
+/* =====================================================================
+   LABORATORIO
+   ===================================================================== */
+const Lab=(()=>{
+  const cache={};
+  function fact(n){let r=1n;for(let i=2n;i<=BigInt(n);i++)r*=i;return r}
+  function sci(b){const s=b.toString();const exp=s.length-1;return`${s[0]},${s.slice(1,3)} × 10<sup>${exp}</sup>`}
+  function C(n,k){let r=1;for(let i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
+  function cruzDist(rule){if(cache[rule])return cache[rule];const cnt=new Array(23).fill(0);let tot=0;
+    for(let a=1;a<=22;a++)for(let b=a+1;b<=22;b++)for(let c=b+1;c<=22;c++)for(let d=c+1;d<=22;d++){let s=a+b+c+d,r;
+      if(rule==="A"){while(s>22)s=String(s).split("").reduce((x,y)=>x+(+y),0);r=s===22?0:s}else{r=s%22}cnt[r]++;tot++}
+    const p=cnt.slice(0,22).map(v=>v/tot);p.total=tot;cache[rule]=p;return p}
+  function bars(svgEl,vals,opts={}){
+    const W=660,H=300,pl=30,pr=10,pt=20,pb=36,n=vals.length,bw=(W-pl-pr)/n,max=opts.max||Math.max(...vals)*1.12||1;
+    let s="";
+    for(let i=0;i<=4;i++){const y=pt+(H-pt-pb)*i/4;s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="rgba(232,220,192,.08)"/>`}
+    vals.forEach((v,i)=>{const h=(H-pt-pb)*v/max,x=pl+i*bw+bw*.15,y=H-pb-h;s+=`<rect class="bar ${opts.hi&&opts.hi(i,v)?"hi":""} ${v===0?"zero":""}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw*.7).toFixed(1)}" height="${Math.max(0,h).toFixed(1)}"><title>${label(i)}: ${opts.fmt?opts.fmt(v):v}</title></rect>`;
+      if(v===0)s+=`<text x="${(x+bw*.35).toFixed(1)}" y="${H-pb-6}" style="fill:var(--verm)">∅</text>`;
+      s+=`<text x="${(pl+i*bw+bw/2).toFixed(1)}" y="${H-pb+16}" style="font-size:${ROMAN[i].length>4?8:10}px">${ROMAN[i]||"0"}</text>`});
+    if(opts.exp!=null){const y=H-pb-(H-pt-pb)*opts.exp/max;s+=`<line class="exp" x1="${pl}" x2="${W-pr}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${W-pr-4}" y="${(y-6).toFixed(1)}" style="text-anchor:end;fill:var(--ochre)">esperado</text>`}
+    svgEl.innerHTML=s}
+  function drawCruz(rule){const p=cruzDist(rule);
+    bars($("#chartCruz"),p,{fmt:v=>(v*100).toFixed(2)+" %",hi:(i,v)=>v>=.09,exp:1/22});
+    const sorted=p.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]);const zero=p.map((v,i)=>v===0?i:null).filter(v=>v!=null);
+    $("#reglaTxt").innerHTML=rule==="A"?`Regla básica: se suma y, si pasa de 22, se suman las cifras hasta bajar de 22 (22 = el Loco). Imposibles: ${zero.map(i=>ARC[i].es).join(" y ")}. Más probable: ${ARC[sorted[0][1]].es} (${(sorted[0][0]*100).toFixed(2)} %). Menos probable de las posibles: ${ARC[sorted.filter(s=>s[0]>0).slice(-1)[0][1]].es} (${(sorted.filter(s=>s[0]>0).slice(-1)[0][0]*100).toFixed(2)} %).`
+      :`Variante: se resta 22 tantas veces como haga falta (0 = el Loco). Ninguna carta queda excluida, pero la distribución sigue sin ser uniforme: la más probable sale un ${(sorted[0][0]*100).toFixed(2)} % y la menos un ${(sorted[21][0]*100).toFixed(2)} %. La regla elegida cambia el mensaje.`;
+    $("#nCombos").textContent=fmt(p.total)}
+  function sim(N){const cnt=new Array(22).fill(0);for(let k=0;k<N;k++){const d=Array.from({length:22},(_,i)=>i);for(let j=0;j<3;j++){const r=j+rint(22-j);[d[j],d[r]]=[d[r],d[j]];cnt[d[j]]++}}
+    const exp=N*3/22,max=Math.max(...cnt),min=Math.min(...cnt);
+    bars($("#chartSim"),cnt,{exp,max:Math.max(max,exp)*1.15,hi:(i,v)=>v===max});
+    const dev=Math.max(Math.abs(max-exp),Math.abs(min-exp))/exp*100;
+    $("#simTxt").innerHTML=`${fmt(N)} tiradas, ${fmt(N*3)} cartas. Cada arcano debería salir unas ${fmt(Math.round(exp))} veces. El que más salió, ${max}; el que menos, ${min}. Desviación máxima: <b>${dev.toFixed(1)} %</b>. ${N<=30?"Con tan pocas tiradas, las rachas parecen mensajes.":N>=30000?"Con muchas, el azar se aplana.":""}`}
+  function seed(){const v=$("#seedIn").value;if(!v.trim()){$("#seedOut").textContent="";return}const h=seedOf(v),n=h%22;$("#seedOut").innerHTML=`«${esc(v.trim().toLowerCase())}» → FNV-1a → ${fmt(h)}<br>${fmt(h)} mod 22 = <b style="color:var(--ochre)">${n}</b> → ${esc(label(n))}`}
+  function init(){
+    const f22=fact(22),f78=fact(78);
+    const c=[
+      [sci(f22),"órdenes posibles de los 22 Arcanos Mayores al barajar (22!)."],
+      [sci(f78),"órdenes posibles de la baraja completa de 78 cartas (78!). Cada barajado es, casi con seguridad, único en la historia."],
+      [fmt(22*21*20),"tiradas distintas de tres cartas, contando el orden, con los Arcanos Mayores."],
+      [(3/22*100).toFixed(1)+" %","probabilidad de que una carta concreta aparezca en una tirada de tres."],
+      [((1-C(19,3)/C(22,3))*100).toFixed(1)+" %","probabilidad de que dos tiradas de tres cartas compartan al menos una. Por eso «me vuelve a salir» es tan frecuente."],
+      [((1-C(75,3)/C(78,3))*100).toFixed(1)+" %","la misma probabilidad con la baraja completa de 78: la repetición se vuelve mucho más rara."]];
+    $("#cifras").innerHTML=c.map(([v,l])=>`<div class="cifra"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+    drawCruz("A");
+    $$("[data-regla]").forEach(b=>b.addEventListener("click",()=>{$$("[data-regla]").forEach(x=>x.classList.toggle("on",x===b));drawCruz(b.dataset.regla)}));
+    $$("[data-sim]").forEach(b=>b.addEventListener("click",()=>{$$("[data-sim]").forEach(x=>x.classList.toggle("on",x===b));sim(+b.dataset.sim)}));
+    bars($("#chartSim"),new Array(22).fill(0),{max:1});
+    $("#seedIn").addEventListener("input",seed);seed();
+  }
+  return{init,cruzDist};
+})();
+
+/* =====================================================================
+   MITO · COLORES · DIÁLOGOS · NAVEGACIÓN
+   ===================================================================== */
+function buildMito(){const tag={dato:"Dato",hip:"Hipótesis",sis:"Sistema simbólico",mito:"Mito"};$("#timeline").innerHTML=MITO.map(m=>`<div class="tl-item ${m.k}"><span class="tl-y">${esc(m.y)}</span><span class="tl-tag">${tag[m.k]}</span><h3>${esc(m.t)}</h3><p>${esc(m.d)}</p></div>`).join("")}
+function buildColores(){$("#coloresGrid").innerHTML=COLORES.map(c=>`<div class="color"><div class="sw" style="background-color:${c.h}"></div><div class="c"><h3>${c.n}</h3><p>${esc(c.p)}</p><p class="neg">Sombra: ${esc(c.m)}</p></div></div>`).join("")+`<p class="note" style="grid-column:1/-1">A partir de la tabla de colores de Jodorowsky y Costa en <i>La vía del Tarot</i>, reformulada.</p>`}
+function initUI(){
+  $$("[data-dlg]").forEach(b=>b.addEventListener("click",()=>$("#"+b.dataset.dlg).showModal()));
+  $$("dialog.dlg").forEach(d=>{d.addEventListener("click",e=>{if(e.target===d||e.target.closest("[data-close-dlg]"))d.close()})});
+  const top=$("#top");addEventListener("scroll",()=>top.classList.toggle("solid",scrollY>40),{passive:true});
+  const mb=$("#menuBtn"),nav=$("#nav");mb.addEventListener("click",()=>{const o=nav.classList.toggle("open");mb.setAttribute("aria-expanded",o)});
+  $$("a",nav).forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");mb.setAttribute("aria-expanded","false")}));
+  const links=$$("a",nav);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle("on",l.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
+  $$("main section").forEach(s=>io.observe(s));
+}
+
+(async function boot(){
+  try{await Promise.all([document.fonts.load("160px Fell"),document.fonts.load("italic 14px Garamond"),document.fonts.load("16px Garamond")])}catch(e){}
+  buildPoints();
+  initUI();buildIndice();buildViaje();Mesa.init();Diario.init();Grafo.build();Lab.init();buildMito();buildColores();Nube.init();
+})();
+</script>
+</body>
+</html>
