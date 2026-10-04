@@ -291,6 +291,9 @@ textarea::placeholder{color:var(--muted);font-style:italic}
 footer{border-top:1px solid var(--line);padding:56px var(--gutter) 40px;color:var(--dim);font-size:.92em}
 .foot{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
 .foot-links{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:flex-end;align-content:flex-start}
+.foot-aviso{max-width:1180px;margin:36px auto 0;padding-top:20px;border-top:1px solid var(--line);font-size:.88em;color:var(--dim)}
+.foot-aviso p{margin:0 0 4px}
+.foot-aviso a{color:var(--paper-2)}
 .foot-links button{background:none;border:0;padding:0;color:var(--paper-2);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-2)}
 @media (max-width:760px){.foot{grid-template-columns:1fr}.foot-links{justify-content:flex-start}}
 .dlg{width:min(760px,calc(100vw - 24px));max-height:calc(100svh - 40px);background:var(--ink-2);border:1px solid var(--line-2)}
@@ -592,9 +595,13 @@ footer{border-top:1px solid var(--line);padding:56px var(--gutter) 40px;color:va
       <button id="diarioBtn2">Mi diario</button>
       <button data-dlg="dlgFuentes">Fuentes</button>
       <button data-dlg="dlgIA">Transparencia IA</button>
-      <button data-dlg="dlgImpressum">Impressum</button>
+      <button data-dlg="dlgImpressum">Aviso legal</button>
       <button data-dlg="dlgDatenschutz">Protección de datos</button>
     </div>
+  </div>
+  <div class="foot-aviso">
+    <p>Proyecto personal, artístico y educativo, sin ánimo comercial: no vende productos ni servicios, no contiene publicidad y no recoge datos de quien lo visita.</p>
+    <p>Contacto: <a href="mailto:visual.nexus.berlin@gmail.com">visual.nexus.berlin@gmail.com</a></p>
   </div>
 </footer>
 
@@ -659,28 +666,26 @@ footer{border-top:1px solid var(--line);padding:56px var(--gutter) 40px;color:va
 
 <dialog class="dlg" id="dlgImpressum"><div class="dlg-in">
   <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
-  <h2>Impressum</h2>
-  <p>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</p>
-  <p><span class="ph">[Nombre y apellidos o razón social]</span><br><span class="ph">[Calle y número]</span><br><span class="ph">[Código postal] Berlin</span><br>Deutschland</p>
-  <h3>Kontakt</h3>
-  <p>E-Mail: <span class="ph">[correo de contacto]</span></p>
-  <h3>Registereintrag / USt-IdNr.</h3>
-  <p><span class="ph">[Si aplica: Registergericht, Registernummer, Umsatzsteuer-Identifikationsnummer]</span></p>
-  <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
-  <p><span class="ph">[Nombre y dirección]</span></p>
+  <h2>Aviso legal</h2>
+  <h3>Naturaleza del proyecto</h3>
+  <p>Speculum Arcanorum es un proyecto personal, artístico y educativo, sin ánimo comercial. No vende productos ni servicios, no contiene publicidad, no usa herramientas de seguimiento y no recoge datos de quien lo visita.</p>
+  <h3>Contacto</h3>
+  <p><a href="mailto:visual.nexus.berlin@gmail.com">visual.nexus.berlin@gmail.com</a></p>
+  <h3>Contenidos</h3>
+  <p>Los textos son propios y reformulan, con cita, ideas de las obras indicadas en "Fuentes". Las estampas son imágenes generadas con IA bajo dirección artística humana (ver "Transparencia IA"). El tarot se presenta como herramienta de reflexión, no de predicción, y no sustituye ningún consejo profesional.</p>
 </div></dialog>
 
 <dialog class="dlg" id="dlgDatenschutz"><div class="dlg-in">
   <button class="x-close" data-close-dlg aria-label="Cerrar">×</button>
   <h2>Protección de datos · Datenschutzerklärung</h2>
   <h3>Responsable</h3>
-  <p>El responsable del tratamiento en el sentido del RGPD (DSGVO) es la persona indicada en el Impressum.</p>
+  <p>Responsable del tratamiento en el sentido del RGPD (DSGVO): la persona autora de este proyecto personal, a quien puedes escribir en <a href="mailto:visual.nexus.berlin@gmail.com">visual.nexus.berlin@gmail.com</a>.</p>
   <h3>Lo que esta web no hace</h3>
   <p>No usa cookies, no usa herramientas de análisis ni de seguimiento, no carga fuentes, scripts ni imágenes de servidores externos y no envía a ningún servidor lo que escribes.</p>
   <h3>Almacenamiento local</h3>
   <p>Tus reflejos, lecturas guardadas y secretos descubiertos se almacenan únicamente en el almacenamiento local de tu navegador (localStorage), en tu dispositivo. No tenemos acceso a ellos. Puedes borrarlos en cualquier momento desde "Mi diario" o desde la configuración de tu navegador. Base jurídica: § 25 Abs. 2 Nr. 2 TDDDG (almacenamiento estrictamente necesario para una función solicitada por ti).</p>
   <h3>Alojamiento</h3>
-  <p>La web se aloja en Firebase Hosting, un servicio de Google Ireland Limited (Gordon House, Barrow Street, Dublín 4, Irlanda). Al visitarla, el servidor procesa técnicamente tu dirección IP y datos de la petición para entregar la página y garantizar su seguridad. Base jurídica: art. 6.1.f RGPD (interés legítimo en un funcionamiento seguro). Puede producirse una transferencia a EE. UU., amparada por el EU-U.S. Data Privacy Framework. <span class="ph">[Revisar y completar según la configuración real del proyecto Firebase.]</span></p>
+  <p>La web se aloja en Firebase Hosting, un servicio de Google Ireland Limited (Gordon House, Barrow Street, Dublín 4, Irlanda). Al visitarla, el servidor procesa técnicamente tu dirección IP y datos de la petición para entregar la página y garantizar su seguridad. Base jurídica: art. 6.1.f RGPD (interés legítimo en un funcionamiento seguro). Puede producirse una transferencia a EE. UU., amparada por el EU-U.S. Data Privacy Framework.</p>
   <h3>Tus derechos</h3>
   <p>Tienes derecho de acceso, rectificación, supresión, limitación, portabilidad y oposición (arts. 15 a 21 RGPD), así como a presentar una reclamación ante una autoridad de control, por ejemplo la Berliner Beauftragte für Datenschutz und Informationsfreiheit.</p>
 </div></dialog>
