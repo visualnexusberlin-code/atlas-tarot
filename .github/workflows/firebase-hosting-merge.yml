@@ -1,16 +1,38 @@
-name: Deploy to Firebase Hosting on merge
+name: Deploy to Firebase Hosting
+
+# Fase privada: cada push a main publica en un canal de vista previa
+# (URL propia, caduca a los 7 días, sin indexar). El canal "live"
+# (atlas-tarot.web.app) solo se publica a mano, con el Impressum resuelto:
+# Actions → "Deploy to Firebase Hosting" → Run workflow → live = true.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      live:
+        description: "Publicar en atlas-tarot.web.app (solo con el Impressum completo)"
+        type: boolean
+        default: false
+
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Vista previa privada (7 días)
+        if: ${{ !inputs.live }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATLAS_TAROT }}
-          channelId: live
           projectId: atlas-tarot
+          channelId: privado
+          expires: 7d
+      - name: Publicación en vivo
+        if: ${{ inputs.live }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATLAS_TAROT }}
+          projectId: atlas-tarot
+          channelId: live
